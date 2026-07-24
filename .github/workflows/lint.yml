@@ -26,6 +26,9 @@ jobs:
       - name: Test placeholder renderer
         run: php tests/renderer.php
 
+      - name: Test MODX mail adapter
+        run: php tests/mailer.php
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
