@@ -49,7 +49,7 @@ class DnepritNewsletterWebSubscribeProcessor extends modProcessor
 
         $email = $this->normalizeEmail((string)$this->getProperty('email', ''));
         $name = $this->normalizeName((string)$this->getProperty('name', ''));
-        $consentRequired = (bool)$this->modx->getOption('dnepritnewsletter.require_consent', null, true);
+        $consentRequired = !empty($metadata['require_consent']);
         $consent = (string)$this->getProperty('consent', '') === '1';
 
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
