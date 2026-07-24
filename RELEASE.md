@@ -10,6 +10,10 @@ Target: MODX Revolution 2.8.1 / PHP 7.4+
 
 The beta label is intentional until SMTP and browser behavior are checked on a real staging site.
 
+## Automated verification
+
+Release branches matching `release/*` run both the normal syntax checks and the clean-install package job. The release job installs a fresh MODX Revolution 2.8.1 instance, builds the transport ZIP, verifies its SHA-256 checksum, installs the package and validates the namespace, menu, snippets, settings, database tables and copied component files.
+
 ## Downloading the package from GitHub Actions
 
 1. Open the repository on GitHub.
