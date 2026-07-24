@@ -104,6 +104,7 @@ $_lang['dnepritnewsletter_placeholder_site'] = 'назва сайту';
 $_lang['dnepritnewsletter_campaign_recipients'] = 'Одержувачі';
 $_lang['dnepritnewsletter_campaign_sent'] = 'Надіслано';
 $_lang['dnepritnewsletter_campaign_failed'] = 'Помилки';
+$_lang['dnepritnewsletter_campaign_skipped'] = 'Пропущено';
 $_lang['dnepritnewsletter_campaign_created_at'] = 'Створено';
 $_lang['dnepritnewsletter_campaign_remove_confirm'] = 'Видалити цю чернетку розсилки? Цю дію неможливо скасувати.';
 $_lang['dnepritnewsletter_campaign_status_draft'] = 'Чернетка';
