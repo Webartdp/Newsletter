@@ -89,6 +89,7 @@ $settings = [
     'dnepritnewsletter.sender_name' => ['value' => '', 'xtype' => 'textfield'],
     'dnepritnewsletter.reply_to' => ['value' => '', 'xtype' => 'textfield'],
     'dnepritnewsletter.unsubscribe_resource_id' => ['value' => 0, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.import_max_size' => ['value' => 10485760, 'xtype' => 'numberfield'],
 ];
 
 foreach ($settings as $key => $data) {
@@ -111,7 +112,7 @@ foreach ($settings as $key => $data) {
 $package->setPackageAttributes([
     'license' => file_get_contents($root . 'LICENSE'),
     'readme' => file_get_contents($root . 'README.md'),
-    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n",
+    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n",
 ]);
 
 $package->pack();
