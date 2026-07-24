@@ -19,7 +19,8 @@ DnepritNewsletter.panel.Home = function (config) {
                 items: [{xtype: 'dnepritnewsletter-grid-subscribers'}]
             }, {
                 title: _('dnepritnewsletter_campaigns'),
-                html: '<div class="dnepritnewsletter-placeholder">' + _('dnepritnewsletter_campaigns') + '</div>'
+                layout: 'anchor',
+                items: [{xtype: 'dnepritnewsletter-grid-campaigns'}]
             }, {
                 title: _('dnepritnewsletter_settings'),
                 html: '<div class="dnepritnewsletter-placeholder">' + _('dnepritnewsletter_settings') + '</div>'
