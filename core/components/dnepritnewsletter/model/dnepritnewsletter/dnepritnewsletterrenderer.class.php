@@ -51,12 +51,18 @@ class DnepritNewsletterRenderer
             return (string)$this->modx->makeUrl($resourceId, '', $params, 'full');
         }
 
-        $siteUrl = rtrim((string)$this->modx->getOption('site_url', null, MODX_SITE_URL), '/');
+        $siteUrl = rtrim((string)$this->modx->getOption('site_url', null, ''), '/');
         return $siteUrl . '/?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     protected function cleanHeader($value)
     {
-        return trim((string)preg_replace('/[\r\n]+/', ' ', (string)$value));
+        $value = trim((string)preg_replace('/[\r\n]+/', ' ', (string)$value));
+
+        if (function_exists('mb_substr')) {
+            return mb_substr($value, 0, 255, 'UTF-8');
+        }
+
+        return substr($value, 0, 255);
     }
 }
