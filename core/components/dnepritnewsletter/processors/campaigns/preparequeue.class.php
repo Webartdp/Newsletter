@@ -2,7 +2,7 @@
 
 class DnepritNewsletterCampaignPrepareQueueProcessor extends modProcessor
 {
-    public $languageTopics = ['dnepritnewsletter:default'];
+    public $languageTopics = ['dnepritnewsletter:default', 'dnepritnewsletter:queue'];
 
     public function process()
     {
@@ -21,8 +21,11 @@ class DnepritNewsletterCampaignPrepareQueueProcessor extends modProcessor
             return $this->failure($exception->getMessage());
         }
 
-        $rendererPath = $this->modx->getOption('dnepritnewsletter.core_path', null, MODX_CORE_PATH . 'components/dnepritnewsletter/') .
-            'model/dnepritnewsletter/dnepritnewsletterrenderer.class.php';
+        $rendererPath = $this->modx->getOption(
+            'dnepritnewsletter.core_path',
+            null,
+            MODX_CORE_PATH . 'components/dnepritnewsletter/'
+        ) . 'model/dnepritnewsletter/dnepritnewsletterrenderer.class.php';
         require_once $rendererPath;
         $renderer = new DnepritNewsletterRenderer($this->modx);
 
