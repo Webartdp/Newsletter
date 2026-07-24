@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model package="dnepritnewsletter" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="dnepritnewsletter" version="1.2">
+<model package="dnepritnewsletter" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="dnepritnewsletter" version="1.3">
     <object class="DnepritNewsletterSubscriber" table="newsletter_subscribers" extends="xPDOSimpleObject">
         <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
         <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
@@ -27,6 +27,7 @@
         <field key="recipients_total" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
         <field key="sent_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
         <field key="failed_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="skipped_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
         <field key="created_at" dbtype="datetime" phptype="datetime" null="false" index="index" />
         <field key="updated_at" dbtype="datetime" phptype="datetime" null="false" />
         <field key="scheduled_at" dbtype="datetime" phptype="datetime" null="true" index="index" />

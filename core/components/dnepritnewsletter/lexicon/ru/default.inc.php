@@ -104,6 +104,7 @@ $_lang['dnepritnewsletter_placeholder_site'] = 'название сайта';
 $_lang['dnepritnewsletter_campaign_recipients'] = 'Получатели';
 $_lang['dnepritnewsletter_campaign_sent'] = 'Отправлено';
 $_lang['dnepritnewsletter_campaign_failed'] = 'Ошибки';
+$_lang['dnepritnewsletter_campaign_skipped'] = 'Пропущено';
 $_lang['dnepritnewsletter_campaign_created_at'] = 'Создано';
 $_lang['dnepritnewsletter_campaign_remove_confirm'] = 'Удалить этот черновик рассылки? Это действие нельзя отменить.';
 $_lang['dnepritnewsletter_campaign_status_draft'] = 'Черновик';
