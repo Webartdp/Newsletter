@@ -28,7 +28,7 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
 
     public function getLanguageTopics()
     {
-        return ['dnepritnewsletter:default'];
+        return ['dnepritnewsletter:default', 'dnepritnewsletter:queue'];
     }
 
     public function checkPermissions()
