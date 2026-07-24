@@ -48,10 +48,13 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
 
     public function loadCustomCssJs()
     {
+        $jsUrl = $this->dnepritNewsletter->config['jsUrl'];
+
         $this->addCss($this->dnepritNewsletter->config['cssUrl'] . 'mgr.css');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/subscribers.grid.js');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/home.panel.js');
-        $this->addLastJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/sections/home.js');
+        $this->addJavascript($jsUrl . 'mgr/widgets/subscribers.window.js');
+        $this->addJavascript($jsUrl . 'mgr/widgets/subscribers.grid.js');
+        $this->addJavascript($jsUrl . 'mgr/widgets/home.panel.js');
+        $this->addLastJavascript($jsUrl . 'mgr/sections/home.js');
     }
 
     public function getTemplateFile()
