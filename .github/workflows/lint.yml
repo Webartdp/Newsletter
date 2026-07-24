@@ -70,7 +70,7 @@ jobs:
 
     env:
       MODX_VERSION: 2.8.1-pl
-      MODX_DIR: ${{ runner.temp }}/modx
+      MODX_DIR: /tmp/modx
 
     steps:
       - name: Checkout
@@ -83,22 +83,33 @@ jobs:
           extensions: mysqli, pdo_mysql, zip, mbstring, xml, gd, curl
           coverage: none
 
-      - name: Download MODX Revolution distribution
+      - name: Build MODX Revolution distribution
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "${MODX_DIR}"
-          curl -fsSL --retry 3 \
-            "https://modx.s3.amazonaws.com/releases/2.8.1/modx-${MODX_VERSION}.zip" \
-            -o "${RUNNER_TEMP}/modx.zip"
-          unzip -q "${RUNNER_TEMP}/modx.zip" -d "${MODX_DIR}"
+          rm -rf "${MODX_DIR}"
+          git clone --depth 1 --branch "v${MODX_VERSION}" \
+            https://github.com/modxcms/revolution.git "${MODX_DIR}"
           mkdir -p \
             "${MODX_DIR}/core/cache" \
             "${MODX_DIR}/core/config" \
             "${MODX_DIR}/core/packages"
+          cat > "${MODX_DIR}/_build/build.config.php" <<PHP
+          <?php
+          define('MODX_CORE_PATH', '${MODX_DIR}/core/');
+          define('MODX_CONFIG_KEY', 'config');
+          define('XPDO_DSN', 'mysql:host=127.0.0.1;dbname=modx;charset=utf8');
+          define('XPDO_DB_USER', 'root');
+          define('XPDO_DB_PASS', 'root');
+          define('XPDO_TABLE_PREFIX', 'modx_');
+          PHP
+          cp "${MODX_DIR}/_build/build.properties.sample.php" \
+            "${MODX_DIR}/_build/build.properties.php"
+          sed -i 's/dbname=revo_test/dbname=modx/g' \
+            "${MODX_DIR}/_build/build.properties.php"
+          php "${MODX_DIR}/_build/transport.core.php"
+          test -s "${MODX_DIR}/core/packages/core.transport.zip"
           chmod -R u+rwX "${MODX_DIR}"
-          test -f "${MODX_DIR}/setup/cli-install.php"
-          test -f "${MODX_DIR}/core/packages/core.transport.zip"
 
       - name: Install clean MODX
         shell: bash
@@ -121,7 +132,7 @@ jobs:
             --unpacked=0 \
             --language=en \
             --cmsadmin=admin \
-            --cmspassword=DnepritNewsletter-CI-123! \
+            "--cmspassword=DnepritNewsletter-CI-123!" \
             --cmsadminemail=ci@example.invalid \
             --context_web_path="${MODX_DIR}/" \
             --context_web_url=/ \
