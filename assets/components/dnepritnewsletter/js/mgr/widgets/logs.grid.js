@@ -102,7 +102,11 @@ DnepritNewsletter.grid.Logs = function (config) {
                     ['retry_scheduled', _('dnepritnewsletter_log_event_retry_scheduled')],
                     ['manual_retry', _('dnepritnewsletter_log_event_manual_retry')],
                     ['failed', _('dnepritnewsletter_log_event_failed')],
-                    ['skipped_inactive', _('dnepritnewsletter_log_event_skipped_inactive')]
+                    ['skipped_inactive', _('dnepritnewsletter_log_event_skipped_inactive')],
+                    ['public_subscribe_created', _('dnepritnewsletter_log_event_public_subscribe_created')],
+                    ['public_subscribe_existing', _('dnepritnewsletter_log_event_public_subscribe_existing')],
+                    ['public_subscribe_reactivated', _('dnepritnewsletter_log_event_public_subscribe_reactivated')],
+                    ['public_unsubscribe', _('dnepritnewsletter_log_event_public_unsubscribe')]
                 ]
             }),
             mode: 'local',
