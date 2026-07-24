@@ -29,3 +29,59 @@
     color: #991b1b;
     background: #fee2e2;
 }
+
+.dnepritnewsletter-import-preview {
+    margin-top: 18px;
+}
+
+.dnepritnewsletter-import-preview-title {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.dnepritnewsletter-import-preview-scroll {
+    max-height: 240px;
+    overflow: auto;
+    border: 1px solid #d9dde3;
+    background: #fff;
+}
+
+.dnepritnewsletter-import-preview table,
+.dnepritnewsletter-import-report table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dnepritnewsletter-import-preview th,
+.dnepritnewsletter-import-preview td,
+.dnepritnewsletter-import-report th,
+.dnepritnewsletter-import-report td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #eceff3;
+    text-align: left;
+    vertical-align: top;
+}
+
+.dnepritnewsletter-import-preview th {
+    width: 36px;
+    color: #667085;
+    background: #f8fafc;
+}
+
+.dnepritnewsletter-import-report th {
+    width: 70%;
+    font-weight: 500;
+}
+
+.dnepritnewsletter-import-report td {
+    font-weight: 700;
+    text-align: right;
+}
+
+.dnepritnewsletter-import-errors {
+    margin-top: 14px;
+}
+
+.dnepritnewsletter-import-errors ul {
+    margin: 6px 0 0 18px;
+}

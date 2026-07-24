@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+
+      - name: Lint PHP
+        run: find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Lint JavaScript
+        run: find assets/components/dnepritnewsletter/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Validate xPDO schema XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('core/components/dnepritnewsletter/schema/dnepritnewsletter.mysql.schema.xml')"
