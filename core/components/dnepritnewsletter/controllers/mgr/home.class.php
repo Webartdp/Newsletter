@@ -28,7 +28,11 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
 
     public function getLanguageTopics()
     {
-        return ['dnepritnewsletter:default', 'dnepritnewsletter:queue'];
+        return [
+            'dnepritnewsletter:default',
+            'dnepritnewsletter:queue',
+            'dnepritnewsletter:monitoring',
+        ];
     }
 
     public function checkPermissions()
@@ -57,6 +61,8 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
         $this->addJavascript($jsUrl . 'widgets/campaigns.window.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.queue.window.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/queue.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/logs.grid.js');
         $this->addJavascript($jsUrl . 'widgets/home.panel.js');
         $this->addLastJavascript($jsUrl . 'sections/home.js');
     }
