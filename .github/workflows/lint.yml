@@ -29,6 +29,9 @@ jobs:
       - name: Test MODX mail adapter
         run: php tests/mailer.php
 
+      - name: Test public form guard
+        run: php tests/public_guard.php
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
