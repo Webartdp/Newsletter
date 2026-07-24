@@ -56,7 +56,7 @@
         }
 
         for (var index = 0; index < errors.length; index++) {
-            var key = errors[index].field || errors[index].name || '';
+            var key = errors[index].field || errors[index].name || errors[index].id || '';
             var field = key ? form.querySelector('[name="' + key.replace(/"/g, '') + '"]') : null;
             if (field) {
                 field.setAttribute('aria-invalid', 'true');
@@ -75,7 +75,10 @@
     function dispatchSuccess(form, response) {
         var event;
         if (typeof window.CustomEvent === 'function') {
-            event = new CustomEvent('dnepritNewsletter:success', {detail: response});
+            event = new CustomEvent('dnepritNewsletter:success', {
+                detail: response,
+                bubbles: true
+            });
         } else {
             event = document.createEvent('CustomEvent');
             event.initCustomEvent('dnepritNewsletter:success', true, true, response);
