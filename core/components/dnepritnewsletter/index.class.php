@@ -2,26 +2,6 @@
 
 class DnepritNewsletterManagerController extends modExtraManagerController
 {
-    /** @var DnepritNewsletter */
-    public $dnepritNewsletter;
-
-    public function initialize()
-    {
-        $corePath = $this->modx->getOption(
-            'dnepritnewsletter.core_path',
-            null,
-            $this->modx->getOption('core_path') . 'components/dnepritnewsletter/'
-        );
-
-        require_once $corePath . 'model/dnepritnewsletter/dnepritnewsletter.class.php';
-        $this->dnepritNewsletter = new DnepritNewsletter($this->modx);
-
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/dnepritnewsletter.js');
-        $this->addHtml('<script>Ext.onReady(function(){DnepritNewsletter.config=' . $this->modx->toJSON($this->dnepritNewsletter->config) . ';});</script>');
-
-        return parent::initialize();
-    }
-
     public function getLanguageTopics()
     {
         return ['dnepritnewsletter:default'];
