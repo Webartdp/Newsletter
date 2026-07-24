@@ -84,6 +84,8 @@ $settings = [
     'dnepritnewsletter.limit_per_minute' => ['value' => 50, 'xtype' => 'numberfield'],
     'dnepritnewsletter.limit_per_hour' => ['value' => 500, 'xtype' => 'numberfield'],
     'dnepritnewsletter.max_attempts' => ['value' => 3, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.retry_delay' => ['value' => 300, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.lock_ttl' => ['value' => 3600, 'xtype' => 'numberfield'],
     'dnepritnewsletter.failure_limit' => ['value' => 3, 'xtype' => 'numberfield'],
     'dnepritnewsletter.sender_email' => ['value' => '', 'xtype' => 'textfield'],
     'dnepritnewsletter.sender_name' => ['value' => '', 'xtype' => 'textfield'],
@@ -112,7 +114,7 @@ foreach ($settings as $key => $data) {
 $package->setPackageAttributes([
     'license' => file_get_contents($root . 'LICENSE'),
     'readme' => file_get_contents($root . 'README.md'),
-    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n",
+    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n- Campaign editor and personalized queue preparation.\n- Cron batch sender with limits and retries.\n",
 ]);
 
 $package->pack();
