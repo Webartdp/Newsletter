@@ -1,5 +1,49 @@
 # DnepritNewsletter
 
-Email newsletter component for MODX Revolution 2.8.1.
+Компонент email-розсилок для MODX Revolution 2.8.1.
 
-> The repository is being initialized. Development changes are submitted through pull requests.
+## Поточний етап
+
+Перший технічний фундамент компонента:
+
+- стандартна структура MODX Extra;
+- xPDO-схема для підписників, кампаній, черги та журналу;
+- сервісний клас компонента;
+- CMP-контролер і пункт меню;
+- базова ExtJS-панель зі вкладкою підписників;
+- процесор серверного списку підписників;
+- transport package builder;
+- resolver для створення таблиць.
+
+## Вимоги
+
+- MODX Revolution 2.8.1;
+- PHP 7.4+;
+- MySQL/MariaDB;
+- ExtJS 3.4 / MODExt.
+
+## Збірка пакета
+
+1. Вкажіть шлях до MODX у `_build/config.php` або через змінну середовища `MODX_BASE_PATH`.
+2. Запустіть:
+
+```bash
+php _build/build.transport.php
+```
+
+Готовий пакет з'явиться у `_build/packages/`.
+
+## План розробки
+
+1. CRUD підписників.
+2. Імпорт CSV/TXT.
+3. CRUD кампаній і редактор листа.
+4. Формування черги.
+5. Пакетна відправка через Cron.
+6. Журнал, повторні спроби та статистика.
+7. AJAX-форма підписки й сторінка відписки.
+8. Документація та релізний transport package.
+
+## Ліцензія
+
+MIT.

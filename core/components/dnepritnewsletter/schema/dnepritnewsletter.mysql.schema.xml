@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="dnepritnewsletter" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="dnepritnewsletter" version="1.1">
+    <object class="DnepritNewsletterSubscriber" table="newsletter_subscribers" extends="xPDOSimpleObject">
+        <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="status" dbtype="varchar" precision="32" phptype="string" null="false" default="active" index="index" />
+        <field key="source" dbtype="varchar" precision="100" phptype="string" null="false" default="manager" index="index" />
+        <field key="unsubscribe_token" dbtype="varchar" precision="128" phptype="string" null="false" default="" index="unique" />
+        <field key="failure_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="blocked_reason" dbtype="varchar" precision="64" phptype="string" null="false" default="" />
+        <field key="comment" dbtype="text" phptype="string" null="true" />
+        <field key="subscribed_at" dbtype="datetime" phptype="datetime" null="false" />
+        <field key="updated_at" dbtype="datetime" phptype="datetime" null="false" />
+        <field key="unsubscribed_at" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="created_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+    </object>
+
+    <object class="DnepritNewsletterCampaign" table="newsletter_campaigns" extends="xPDOSimpleObject">
+        <field key="title" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="subject" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="body_html" dbtype="mediumtext" phptype="string" null="false" />
+        <field key="body_text" dbtype="mediumtext" phptype="string" null="true" />
+        <field key="sender_email" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="sender_name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="reply_to" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="status" dbtype="varchar" precision="32" phptype="string" null="false" default="draft" index="index" />
+        <field key="recipients_total" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="sent_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="failed_count" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="created_at" dbtype="datetime" phptype="datetime" null="false" index="index" />
+        <field key="updated_at" dbtype="datetime" phptype="datetime" null="false" />
+        <field key="scheduled_at" dbtype="datetime" phptype="datetime" null="true" index="index" />
+        <field key="started_at" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="finished_at" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="created_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+    </object>
+
+    <object class="DnepritNewsletterQueue" table="newsletter_queue" extends="xPDOSimpleObject">
+        <field key="campaign_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="subscriber_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="status" dbtype="varchar" precision="32" phptype="string" null="false" default="pending" index="index" />
+        <field key="attempts" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="last_error" dbtype="text" phptype="string" null="true" />
+        <field key="queued_at" dbtype="datetime" phptype="datetime" null="false" />
+        <field key="next_attempt_at" dbtype="datetime" phptype="datetime" null="true" index="index" />
+        <field key="processing_at" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="sent_at" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="locked_at" dbtype="datetime" phptype="datetime" null="true" index="index" />
+        <field key="locked_by" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+        <index alias="campaign_subscriber" name="campaign_subscriber" primary="false" unique="true" type="BTREE">
+            <column key="campaign_id" length="" collation="A" null="false" />
+            <column key="subscriber_id" length="" collation="A" null="false" />
+        </index>
+    </object>
+
+    <object class="DnepritNewsletterLog" table="newsletter_logs" extends="xPDOSimpleObject">
+        <field key="campaign_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" index="index" />
+        <field key="subscriber_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" index="index" />
+        <field key="queue_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" index="index" />
+        <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="event" dbtype="varchar" precision="64" phptype="string" null="false" default="" index="index" />
+        <field key="level" dbtype="varchar" precision="32" phptype="string" null="false" default="info" />
+        <field key="attempt" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="message" dbtype="text" phptype="string" null="true" />
+        <field key="created_at" dbtype="datetime" phptype="datetime" null="false" index="index" />
+    </object>
+</model>

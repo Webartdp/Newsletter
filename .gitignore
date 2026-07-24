@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+_build/packages/
+_build/workspace/
+core/components/dnepritnewsletter/model/dnepritnewsletter/base/
+core/components/dnepritnewsletter/model/dnepritnewsletter/mysql/
+core/components/dnepritnewsletter/model/dnepritnewsletter/metadata.mysql.php
