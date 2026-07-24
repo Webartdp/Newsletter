@@ -13,6 +13,7 @@ DnepritNewsletter.panel.Home = function (config) {
             id: 'dnepritnewsletter-home-tabs',
             stateful: true,
             stateId: 'dnepritnewsletter-home-tabs-state',
+            deferredRender: false,
             items: [{
                 title: _('dnepritnewsletter_subscribers'),
                 layout: 'anchor',
@@ -21,6 +22,14 @@ DnepritNewsletter.panel.Home = function (config) {
                 title: _('dnepritnewsletter_campaigns'),
                 layout: 'anchor',
                 items: [{xtype: 'dnepritnewsletter-grid-campaigns'}]
+            }, {
+                title: _('dnepritnewsletter_queue'),
+                layout: 'anchor',
+                items: [{xtype: 'dnepritnewsletter-grid-queue'}]
+            }, {
+                title: _('dnepritnewsletter_logs'),
+                layout: 'anchor',
+                items: [{xtype: 'dnepritnewsletter-grid-logs'}]
             }, {
                 title: _('dnepritnewsletter_settings'),
                 html: '<div class="dnepritnewsletter-placeholder">' + _('dnepritnewsletter_settings') + '</div>'
