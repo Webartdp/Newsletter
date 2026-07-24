@@ -14,6 +14,7 @@ DnepritNewsletter.window.PrepareQueue = function (config) {
             xtype: 'checkbox',
             name: 'send_now',
             inputValue: 1,
+            uncheckedValue: 0,
             checked: true,
             boxLabel: _('dnepritnewsletter_queue_send_now'),
             listeners: {
