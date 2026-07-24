@@ -57,7 +57,6 @@ DnepritNewsletter.window.Campaign = function (config) {
                 items: [{
                     xtype: 'htmleditor',
                     name: 'body_html',
-                    id: 'dnepritnewsletter-campaign-body-html',
                     allowBlank: false,
                     enableSourceEdit: true,
                     anchor: '100%',
@@ -70,7 +69,6 @@ DnepritNewsletter.window.Campaign = function (config) {
                 items: [{
                     xtype: 'textarea',
                     name: 'body_text',
-                    id: 'dnepritnewsletter-campaign-body-text',
                     emptyText: _('dnepritnewsletter_campaign_text_auto'),
                     anchor: '100%',
                     height: 390
