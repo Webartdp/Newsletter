@@ -51,7 +51,7 @@ jobs:
   release-package:
     if: >-
       github.event_name == 'pull_request' &&
-      (github.head_ref == 'agent/release-package' || startsWith(github.head_ref, 'release/'))
+      (startsWith(github.head_ref, 'agent/release-package') || startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-22.04
 
     services:
