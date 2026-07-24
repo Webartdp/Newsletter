@@ -10,6 +10,7 @@ Ext.extend(DnepritNewsletter, Ext.Component, {
     tree: {},
     panel: {},
     combo: {},
+    util: {},
     config: {},
     connectorUrl: ''
 });
