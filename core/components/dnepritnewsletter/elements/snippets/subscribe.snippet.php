@@ -18,6 +18,14 @@ $source = trim($source, '-');
 $source = $source !== '' ? substr($source, 0, 100) : 'website';
 $showName = filter_var($modx->getOption('showName', $scriptProperties, true), FILTER_VALIDATE_BOOLEAN);
 $requireName = filter_var($modx->getOption('requireName', $scriptProperties, false), FILTER_VALIDATE_BOOLEAN);
+$requireConsent = filter_var(
+    $modx->getOption(
+        'requireConsent',
+        $scriptProperties,
+        $modx->getOption('dnepritnewsletter.require_consent', null, true)
+    ),
+    FILTER_VALIDATE_BOOLEAN
+);
 $loadCss = filter_var($modx->getOption('loadCss', $scriptProperties, true), FILTER_VALIDATE_BOOLEAN);
 $loadJs = filter_var($modx->getOption('loadJs', $scriptProperties, true), FILTER_VALIDATE_BOOLEAN);
 $tpl = trim((string)$modx->getOption('tpl', $scriptProperties, ''));
@@ -26,6 +34,7 @@ $formToken = $guard->issue([
     'action' => 'subscribe',
     'source' => $source,
     'require_name' => $requireName,
+    'require_consent' => $requireConsent,
 ]);
 
 if ($formToken === '') {
@@ -57,6 +66,7 @@ $placeholders = [
     'source' => $source,
     'show_name' => $showName ? 1 : 0,
     'require_name' => $requireName ? 1 : 0,
+    'require_consent' => $requireConsent ? 1 : 0,
     'email_label' => (string)$modx->getOption('emailLabel', $scriptProperties, $modx->lexicon('dnepritnewsletter_web_email_label')),
     'email_placeholder' => (string)$modx->getOption('emailPlaceholder', $scriptProperties, $modx->lexicon('dnepritnewsletter_web_email_placeholder')),
     'name_label' => (string)$modx->getOption('nameLabel', $scriptProperties, $modx->lexicon('dnepritnewsletter_web_name_label')),
@@ -86,7 +96,7 @@ if ($showName) {
 
 return '<form id="' . $escape($formId) . '" class="' . $escape($placeholders['form_class']) . '" '
     . 'action="' . $escape($placeholders['connector_url']) . '" method="post" data-dneprit-newsletter-form>'
-    . '<input type="hidden" name="form_token" value="' . $escape($formToken) . '">' 
+    . '<input type="hidden" name="form_token" value="' . $escape($formToken) . '">'
     . '<div class="dneprit-newsletter-honeypot" aria-hidden="true">'
     . '<label>Website<input type="text" name="website" value="" tabindex="-1" autocomplete="off"></label>'
     . '</div>'
@@ -97,7 +107,7 @@ return '<form id="' . $escape($formId) . '" class="' . $escape($placeholders['fo
     . 'autocomplete="email" inputmode="email" placeholder="' . $escape($placeholders['email_placeholder']) . '" required>'
     . '</div>'
     . '<label class="dneprit-newsletter-consent">'
-    . '<input type="checkbox" name="consent" value="1" required> '
+    . '<input type="checkbox" name="consent" value="1"' . ($requireConsent ? ' required' : '') . '> '
     . '<span>' . $escape($placeholders['consent_text']) . '</span>'
     . '</label>'
     . '<button type="submit" class="dneprit-newsletter-submit">' . $escape($placeholders['button_text']) . '</button>'
