@@ -1,0 +1,133 @@
+name: Build release package
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.head_ref == 'agent/release-package' ||
+      startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-22.04
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: modx
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    env:
+      MODX_VERSION: 2.8.1-pl
+      MODX_DIR: ${{ runner.temp }}/modx
+
+    steps:
+      - name: Checkout component
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mysqli, pdo_mysql, zip, mbstring, xml, gd, curl
+          coverage: none
+
+      - name: Download MODX Revolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            "https://github.com/modxcms/revolution/archive/refs/tags/v${MODX_VERSION}.zip" \
+            -o "${RUNNER_TEMP}/modx.zip"
+          unzip -q "${RUNNER_TEMP}/modx.zip" -d "${RUNNER_TEMP}"
+          mv "${RUNNER_TEMP}/revolution-${MODX_VERSION}" "${MODX_DIR}"
+          chmod -R u+rwX "${MODX_DIR}"
+
+      - name: Install clean MODX
+        shell: bash
+        run: |
+          set -euo pipefail
+          php "${MODX_DIR}/setup/cli-install.php" \
+            --mode=new \
+            --database_type=mysql \
+            --database_server=127.0.0.1 \
+            --database=modx \
+            --database_user=root \
+            --database_password=root \
+            --database_connection_charset=utf8 \
+            --database_charset=utf8 \
+            --database_collation=utf8_general_ci \
+            --table_prefix=modx_ \
+            --https_port=443 \
+            --http_host=localhost \
+            --inplace=0 \
+            --unpacked=0 \
+            --language=en \
+            --cmsadmin=admin \
+            --cmspassword=DnepritNewsletter-CI-123! \
+            --cmsadminemail=ci@example.invalid \
+            --context_web_path="${MODX_DIR}/" \
+            --context_web_url=/ \
+            --core_path="${MODX_DIR}/core/" \
+            --context_mgr_path="${MODX_DIR}/manager/" \
+            --context_mgr_url=/manager/ \
+            --context_connectors_path="${MODX_DIR}/connectors/" \
+            --context_connectors_url=/connectors/ \
+            --remove_setup_directory=0
+          test -f "${MODX_DIR}/config.core.php"
+          test -f "${MODX_DIR}/core/config/config.inc.php"
+
+      - name: Run component checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+          php tests/renderer.php
+          php tests/mailer.php
+          php tests/public_guard.php
+          find assets/components/dnepritnewsletter/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          python3 -c "import xml.etree.ElementTree as ET; ET.parse('core/components/dnepritnewsletter/schema/dnepritnewsletter.mysql.schema.xml')"
+
+      - name: Build transport package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _dist
+          MODX_BASE_PATH="${MODX_DIR}" php _build/build.transport.php
+          test -s "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip"
+          sha256sum --check "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip.sha256"
+
+      - name: Install package and run smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          MODX_BASE_PATH="${MODX_DIR}" php _build/install.smoke.php \
+            "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip"
+
+      - name: Upload transport package
+        uses: actions/upload-artifact@v4
+        with:
+          name: dnepritnewsletter-0.1.0-beta1
+          path: |
+            _dist/dnepritnewsletter-0.1.0-beta1.transport.zip
+            _dist/dnepritnewsletter-0.1.0-beta1.transport.zip.sha256
+            _dist/release.json
+          if-no-files-found: error
+          retention-days: 30
