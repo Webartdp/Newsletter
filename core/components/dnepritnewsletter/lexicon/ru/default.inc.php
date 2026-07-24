@@ -71,6 +71,7 @@ $_lang['dnepritnewsletter_import_err_file_required'] = 'Выберите CSV и�
 $_lang['dnepritnewsletter_import_err_upload'] = 'Не удалось загрузить файл.';
 $_lang['dnepritnewsletter_import_err_size'] = 'Файл пустой или превышает допустимый размер.';
 $_lang['dnepritnewsletter_import_err_extension'] = 'Разрешены только файлы CSV и TXT.';
+$_lang['dnepritnewsletter_import_err_mime'] = 'Тип загруженного файла не поддерживается.';
 $_lang['dnepritnewsletter_import_err_store'] = 'Не удалось сохранить временный файл.';
 $_lang['dnepritnewsletter_import_err_empty'] = 'Файл не содержит данных для импорта.';
 $_lang['dnepritnewsletter_import_err_token'] = 'Некорректный токен импорта.';
