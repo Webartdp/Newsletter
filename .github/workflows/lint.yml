@@ -23,6 +23,9 @@ jobs:
       - name: Lint PHP
         run: find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
 
+      - name: Test placeholder renderer
+        run: php tests/renderer.php
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

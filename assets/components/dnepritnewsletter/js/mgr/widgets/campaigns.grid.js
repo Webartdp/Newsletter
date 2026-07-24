@@ -10,7 +10,8 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         fields: [
             'id', 'title', 'subject', 'body_html', 'body_text', 'sender_email', 'sender_name',
             'reply_to', 'status', 'status_label', 'recipients_total', 'sent_count', 'failed_count',
-            'created_at', 'updated_at', 'scheduled_at', 'started_at', 'finished_at', 'can_edit', 'can_remove'
+            'created_at', 'updated_at', 'scheduled_at', 'started_at', 'finished_at',
+            'can_edit', 'can_remove', 'can_prepare'
         ],
         paging: true,
         remoteSort: true,
@@ -23,12 +24,12 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         }, {
             header: _('dnepritnewsletter_campaign_title'),
             dataIndex: 'title',
-            width: 190,
+            width: 180,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_subject'),
             dataIndex: 'subject',
-            width: 240,
+            width: 225,
             sortable: true
         }, {
             header: _('dnepritnewsletter_status'),
@@ -48,12 +49,17 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         }, {
             header: _('dnepritnewsletter_campaign_sent'),
             dataIndex: 'sent_count',
-            width: 75,
+            width: 70,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_failed'),
             dataIndex: 'failed_count',
-            width: 75,
+            width: 70,
+            sortable: true
+        }, {
+            header: _('dnepritnewsletter_queue_scheduled_at'),
+            dataIndex: 'scheduled_at',
+            width: 135,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_created_at'),
@@ -140,6 +146,16 @@ Ext.extend(DnepritNewsletter.grid.Campaigns, MODx.grid.Grid, {
     getMenu: function () {
         var menu = [];
 
+        if (this.menu.record.can_prepare) {
+            menu.push({
+                text: _('dnepritnewsletter_queue_prepare'),
+                handler: function () {
+                    this.openPrepareQueueWindow(this.menu.record);
+                }
+            });
+            menu.push('-');
+        }
+
         if (this.menu.record.can_edit) {
             menu.push({
                 text: _('dnepritnewsletter_campaign_update'),
@@ -216,6 +232,34 @@ Ext.extend(DnepritNewsletter.grid.Campaigns, MODx.grid.Grid, {
         this.updateWindow.reset();
         this.updateWindow.setValues(record);
         this.updateWindow.show(event ? event.target : null);
+    },
+
+    openPrepareQueueWindow: function (record, event) {
+        if (!record || !record.can_prepare) {
+            MODx.msg.alert(_('error'), _('dnepritnewsletter_queue_err_already_prepared'));
+            return;
+        }
+
+        if (!this.queueWindow) {
+            this.queueWindow = MODx.load({
+                xtype: 'dnepritnewsletter-window-prepare-queue',
+                title: _('dnepritnewsletter_queue_prepare_title'),
+                action: 'campaigns/preparequeue',
+                listeners: {
+                    success: {
+                        fn: this.refresh,
+                        scope: this
+                    }
+                }
+            });
+        }
+
+        this.queueWindow.reset();
+        this.queueWindow.setValues({
+            id: record.id,
+            send_now: 1
+        });
+        this.queueWindow.show(event ? event.target : null);
     },
 
     duplicateCampaign: function (record) {
