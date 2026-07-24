@@ -34,6 +34,12 @@ class DnepritNewsletterQueueRetryProcessor extends modProcessor
             ]);
 
             $items = $this->modx->getCollection('DnepritNewsletterQueue', $query);
+            if (!$items) {
+                throw new RuntimeException(
+                    $this->modx->lexicon('dnepritnewsletter_queue_err_no_failed_selection')
+                );
+            }
+
             $campaignIds = [];
             $retried = 0;
             $now = date('Y-m-d H:i:s');
