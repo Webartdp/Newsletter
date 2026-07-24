@@ -38,7 +38,7 @@ jobs:
 
     env:
       MODX_VERSION: 2.8.1-pl
-      MODX_DIR: ${{ runner.temp }}/modx
+      MODX_DIR: /tmp/modx
 
     steps:
       - name: Checkout component
