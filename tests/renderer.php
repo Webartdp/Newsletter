@@ -22,6 +22,14 @@ class modX
     }
 }
 
+function expectTrue($condition, $message)
+{
+    if (!$condition) {
+        fwrite(STDERR, $message . "\n");
+        exit(1);
+    }
+}
+
 require_once __DIR__ . '/../core/components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewsletterrenderer.class.php';
 
 $modx = new modX([
@@ -43,11 +51,11 @@ $result = $renderer->render([
 
 $expectedUrl = 'https://example.test/unsubscribe?newsletter_token=abc%20123';
 
-assert($result['subject'] === 'Hello <Admin> Injected');
-assert(strpos($result['body_html'], '&lt;Admin&gt;') !== false);
-assert(strpos($result['body_html'], 'Example &amp; Site') !== false);
-assert(strpos($result['body_html'], 'newsletter_token=abc%20123') !== false);
-assert(strpos($result['body_text'], '<Admin>') !== false);
-assert(strpos($result['body_text'], $expectedUrl) !== false);
+expectTrue($result['subject'] === 'Hello <Admin> Injected', 'Subject was not sanitized correctly.');
+expectTrue(strpos($result['body_html'], '&lt;Admin&gt;') !== false, 'HTML name was not escaped.');
+expectTrue(strpos($result['body_html'], 'Example &amp; Site') !== false, 'HTML site name was not escaped.');
+expectTrue(strpos($result['body_html'], 'newsletter_token=abc%20123') !== false, 'HTML unsubscribe URL is missing.');
+expectTrue(strpos($result['body_text'], '<Admin>') !== false, 'Plain-text name was changed unexpectedly.');
+expectTrue(strpos($result['body_text'], $expectedUrl) !== false, 'Plain-text unsubscribe URL is missing.');
 
 echo "Renderer tests passed.\n";
