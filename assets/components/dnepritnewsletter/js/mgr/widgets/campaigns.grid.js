@@ -9,7 +9,7 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         },
         fields: [
             'id', 'title', 'subject', 'body_html', 'body_text', 'sender_email', 'sender_name',
-            'reply_to', 'status', 'status_label', 'recipients_total', 'sent_count', 'failed_count',
+            'reply_to', 'status', 'status_label', 'recipients_total', 'sent_count', 'failed_count', 'skipped_count',
             'created_at', 'updated_at', 'scheduled_at', 'started_at', 'finished_at',
             'can_edit', 'can_remove', 'can_prepare'
         ],
@@ -24,12 +24,12 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         }, {
             header: _('dnepritnewsletter_campaign_title'),
             dataIndex: 'title',
-            width: 180,
+            width: 170,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_subject'),
             dataIndex: 'subject',
-            width: 225,
+            width: 210,
             sortable: true
         }, {
             header: _('dnepritnewsletter_status'),
@@ -44,27 +44,32 @@ DnepritNewsletter.grid.Campaigns = function (config) {
         }, {
             header: _('dnepritnewsletter_campaign_recipients'),
             dataIndex: 'recipients_total',
-            width: 85,
+            width: 80,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_sent'),
             dataIndex: 'sent_count',
-            width: 70,
+            width: 65,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_failed'),
             dataIndex: 'failed_count',
-            width: 70,
+            width: 65,
+            sortable: true
+        }, {
+            header: _('dnepritnewsletter_campaign_skipped'),
+            dataIndex: 'skipped_count',
+            width: 75,
             sortable: true
         }, {
             header: _('dnepritnewsletter_queue_scheduled_at'),
             dataIndex: 'scheduled_at',
-            width: 135,
+            width: 130,
             sortable: true
         }, {
             header: _('dnepritnewsletter_campaign_created_at'),
             dataIndex: 'created_at',
-            width: 135,
+            width: 130,
             sortable: true
         }],
         tbar: [{
