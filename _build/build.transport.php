@@ -17,49 +17,97 @@ $modx = new modX();
 $modx->initialize('mgr');
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
+$modx->getService('error', 'error.modError');
+
+if (!$modx->loadClass('transport.modPackageBuilder', '', false, true)) {
+    throw new RuntimeException('Could not load MODX package builder.');
+}
 
 $root = DNEPRITNEWSLETTER_BUILD_ROOT;
 $core = $root . 'core/components/dnepritnewsletter/';
 $assets = $root . 'assets/components/dnepritnewsletter/';
 $model = $core . 'model/';
 $schema = $core . 'schema/dnepritnewsletter.mysql.schema.xml';
+$changelog = $root . 'CHANGELOG.md';
+$license = $root . 'LICENSE';
+$readme = $root . 'README.md';
+$tablesResolver = __DIR__ . '/resolvers/resolve.tables.php';
+
+$requiredFiles = [
+    $schema,
+    $changelog,
+    $license,
+    $readme,
+    $tablesResolver,
+    $core . 'elements/snippets/subscribe.snippet.php',
+    $core . 'elements/snippets/unsubscribe.snippet.php',
+    $assets . 'subscribe.php',
+];
+
+foreach ($requiredFiles as $requiredFile) {
+    if (!is_file($requiredFile)) {
+        throw new RuntimeException('Required build source is missing: ' . $requiredFile);
+    }
+}
 
 $manager = $modx->getManager();
 $generator = $manager->getGenerator();
-
 if (!$generator->parseSchema($schema, $model)) {
-    throw new RuntimeException('Unable to generate xPDO model from schema.');
+    throw new RuntimeException('Unable to generate the xPDO model from schema.');
 }
 
-$package = new xPDOTransport($modx);
-$package->createPackage('dnepritnewsletter', DNEPRITNEWSLETTER_VERSION, DNEPRITNEWSLETTER_RELEASE);
-$package->registerNamespace('dnepritnewsletter', false, true, '{core_path}components/dnepritnewsletter/');
+/** @var modPackageBuilder $builder */
+$builder = new modPackageBuilder($modx);
+$package = $builder->createPackage(
+    'dnepritnewsletter',
+    DNEPRITNEWSLETTER_VERSION,
+    DNEPRITNEWSLETTER_RELEASE
+);
 
-$namespace = $modx->newObject('modNamespace');
-$namespace->fromArray([
-    'name' => 'dnepritnewsletter',
-    'path' => '{core_path}components/dnepritnewsletter/',
-    'assets_path' => '{assets_path}components/dnepritnewsletter/',
-], '', true, true);
+if (!$package || $builder->getSignature() !== DNEPRITNEWSLETTER_SIGNATURE) {
+    throw new RuntimeException('Could not create the expected transport signature.');
+}
 
-$vehicle = $package->createVehicle($namespace, [
+if (!$builder->registerNamespace(
+    'dnepritnewsletter',
+    false,
+    false,
+    '{core_path}components/dnepritnewsletter/',
+    '{assets_path}components/dnepritnewsletter/'
+)) {
+    throw new RuntimeException('Could not register the component namespace.');
+}
+
+$namespaceVehicle = $builder->createVehicle($builder->namespace, [
     xPDOTransport::UNIQUE_KEY => 'name',
     xPDOTransport::PRESERVE_KEYS => true,
     xPDOTransport::UPDATE_OBJECT => true,
+    xPDOTransport::ABORT_INSTALL_ON_VEHICLE_FAIL => true,
 ]);
 
-$vehicle->resolve('file', [
+if (!$namespaceVehicle->resolve('file', [
     'source' => $core,
     'target' => "return MODX_CORE_PATH . 'components/';",
-]);
-$vehicle->resolve('file', [
+])) {
+    throw new RuntimeException('Could not add the core file resolver.');
+}
+
+if (!$namespaceVehicle->resolve('file', [
     'source' => $assets,
     'target' => "return MODX_ASSETS_PATH . 'components/';",
-]);
-$vehicle->resolve('php', [
-    'source' => __DIR__ . '/resolvers/resolve.tables.php',
-]);
-$package->putVehicle($vehicle);
+])) {
+    throw new RuntimeException('Could not add the assets file resolver.');
+}
+
+if (!$namespaceVehicle->resolve('php', [
+    'source' => $tablesResolver,
+])) {
+    throw new RuntimeException('Could not add the database resolver.');
+}
+
+if (!$builder->putVehicle($namespaceVehicle)) {
+    throw new RuntimeException('Could not package the namespace vehicle.');
+}
 
 $menu = $modx->newObject('modMenu');
 $menu->fromArray([
@@ -73,11 +121,14 @@ $menu->fromArray([
     'handler' => '',
     'namespace' => 'dnepritnewsletter',
 ], '', true, true);
-$package->putVehicle($package->createVehicle($menu, [
+
+if (!$builder->putVehicle($builder->createVehicle($menu, [
     xPDOTransport::UNIQUE_KEY => 'text',
     xPDOTransport::PRESERVE_KEYS => true,
     xPDOTransport::UPDATE_OBJECT => true,
-]));
+]))) {
+    throw new RuntimeException('Could not package the manager menu.');
+}
 
 $snippets = [
     'DnepritNewsletterSubscribe' => [
@@ -98,11 +149,13 @@ foreach ($snippets as $name => $data) {
         'snippet' => file_get_contents($data['source']),
     ], '', true, true);
 
-    $package->putVehicle($package->createVehicle($snippet, [
+    if (!$builder->putVehicle($builder->createVehicle($snippet, [
         xPDOTransport::UNIQUE_KEY => 'name',
         xPDOTransport::PRESERVE_KEYS => true,
         xPDOTransport::UPDATE_OBJECT => true,
-    ]));
+    ]))) {
+        throw new RuntimeException('Could not package snippet: ' . $name);
+    }
 }
 
 $settings = [
@@ -138,18 +191,59 @@ foreach ($settings as $key => $data) {
         'area' => 'dnepritnewsletter_main',
     ], '', true, true);
 
-    $package->putVehicle($package->createVehicle($setting, [
+    if (!$builder->putVehicle($builder->createVehicle($setting, [
         xPDOTransport::UNIQUE_KEY => 'key',
         xPDOTransport::PRESERVE_KEYS => true,
         xPDOTransport::UPDATE_OBJECT => true,
-    ]));
+    ]))) {
+        throw new RuntimeException('Could not package system setting: ' . $key);
+    }
 }
 
-$package->setPackageAttributes([
-    'license' => file_get_contents($root . 'LICENSE'),
-    'readme' => file_get_contents($root . 'README.md'),
-    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n- Campaign editor and personalized queue preparation.\n- Cron batch sender with limits and retries.\n- Queue monitoring, delivery logs and manual retries.\n- Public AJAX subscription and secure unsubscribe snippets.\n",
+$builder->setPackageAttributes([
+    'license' => file_get_contents($license),
+    'readme' => file_get_contents($readme),
+    'changelog' => file_get_contents($changelog),
+    'requires' => [
+        'php' => '>=7.4',
+    ],
 ]);
 
-$package->pack();
+if (!$builder->pack()) {
+    throw new RuntimeException('Could not pack the transport archive.');
+}
+
+$sourcePackage = $builder->directory . $builder->filename;
+if (!is_file($sourcePackage) || filesize($sourcePackage) === 0) {
+    throw new RuntimeException('Transport archive was not created: ' . $sourcePackage);
+}
+
+$distDirectory = $root . '_dist/';
+if (!is_dir($distDirectory) && !mkdir($distDirectory, 0775, true) && !is_dir($distDirectory)) {
+    throw new RuntimeException('Could not create distribution directory: ' . $distDirectory);
+}
+
+$distPackage = $distDirectory . $builder->filename;
+if (!copy($sourcePackage, $distPackage)) {
+    throw new RuntimeException('Could not copy transport archive to distribution directory.');
+}
+
+$checksum = hash_file('sha256', $distPackage);
+if ($checksum === false) {
+    throw new RuntimeException('Could not calculate package checksum.');
+}
+
+file_put_contents($distPackage . '.sha256', $checksum . '  ' . basename($distPackage) . PHP_EOL);
+file_put_contents($distDirectory . 'release.json', json_encode([
+    'name' => 'dnepritnewsletter',
+    'version' => DNEPRITNEWSLETTER_VERSION,
+    'release' => DNEPRITNEWSLETTER_RELEASE,
+    'signature' => $builder->getSignature(),
+    'filename' => basename($distPackage),
+    'sha256' => $checksum,
+    'built_at' => gmdate('c'),
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+
 $modx->log(modX::LOG_LEVEL_INFO, 'DnepritNewsletter package built successfully.');
+$modx->log(modX::LOG_LEVEL_INFO, 'Package: ' . $distPackage);
+$modx->log(modX::LOG_LEVEL_INFO, 'SHA-256: ' . $checksum);

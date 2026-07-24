@@ -1,57 +1,25 @@
-name: Lint
+name: Build release package
 
 on:
+  workflow_dispatch:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
+    branches:
+      - main
   push:
     branches:
       - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
 
 jobs:
-  syntax:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup PHP 7.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          coverage: none
-
-      - name: Lint PHP
-        run: find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
-
-      - name: Test placeholder renderer
-        run: php tests/renderer.php
-
-      - name: Test MODX mail adapter
-        run: php tests/mailer.php
-
-      - name: Test public form guard
-        run: php tests/public_guard.php
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Lint JavaScript
-        run: find assets/components/dnepritnewsletter/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
-
-      - name: Validate xPDO schema XML
-        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('core/components/dnepritnewsletter/schema/dnepritnewsletter.mysql.schema.xml')"
-
-  release-package:
+  package:
     if: >-
-      github.event_name == 'pull_request' &&
-      (startsWith(github.head_ref, 'agent/release-package') || startsWith(github.head_ref, 'release/'))
+      github.event_name != 'pull_request' ||
+      startsWith(github.head_ref, 'agent/release-package') ||
+      startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-22.04
 
     services:
@@ -73,7 +41,7 @@ jobs:
       MODX_DIR: ${{ runner.temp }}/modx
 
     steps:
-      - name: Checkout
+      - name: Checkout component
         uses: actions/checkout@v4
 
       - name: Setup PHP 7.4
@@ -82,6 +50,11 @@ jobs:
           php-version: '7.4'
           extensions: mysqli, pdo_mysql, zip, mbstring, xml, gd, curl
           coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Download MODX Revolution distribution
         shell: bash
@@ -131,8 +104,21 @@ jobs:
             --context_connectors_path="${MODX_DIR}/connectors/" \
             --context_connectors_url=/connectors/ \
             --remove_setup_directory=0
+          test -f "${MODX_DIR}/config.core.php"
+          test -f "${MODX_DIR}/core/config/config.inc.php"
 
-      - name: Build package
+      - name: Run component checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+          php tests/renderer.php
+          php tests/mailer.php
+          php tests/public_guard.php
+          find assets/components/dnepritnewsletter/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          python3 -c "import xml.etree.ElementTree as ET; ET.parse('core/components/dnepritnewsletter/schema/dnepritnewsletter.mysql.schema.xml')"
+
+      - name: Build transport package
         shell: bash
         run: |
           set -euo pipefail
@@ -144,9 +130,20 @@ jobs:
             sha256sum --check "dnepritnewsletter-0.1.0-beta1.transport.zip.sha256"
           )
 
-      - name: Install and smoke test package
+      - name: Install package and run smoke test
         shell: bash
         run: |
           set -euo pipefail
           MODX_BASE_PATH="${MODX_DIR}" php _build/install.smoke.php \
             "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip"
+
+      - name: Upload transport package
+        uses: actions/upload-artifact@v4
+        with:
+          name: dnepritnewsletter-0.1.0-beta1
+          path: |
+            _dist/dnepritnewsletter-0.1.0-beta1.transport.zip
+            _dist/dnepritnewsletter-0.1.0-beta1.transport.zip.sha256
+            _dist/release.json
+          if-no-files-found: error
+          retention-days: 30

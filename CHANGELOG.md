@@ -1,0 +1,38 @@
+# Changelog
+
+All notable changes to DnepritNewsletter are documented in this file.
+
+## [0.1.0-beta1] - 2026-07-24
+
+### Added
+
+- MODX CMP for subscriber management, campaign editing, queue monitoring and delivery logs.
+- Subscriber CRUD, status management and mass actions.
+- CSV/TXT import with preview, column mapping, encoding support and duplicate handling.
+- HTML and plain-text campaign editor with personalized placeholders.
+- Transactional queue preparation for immediate or scheduled delivery.
+- Cron worker with locking, rate limits, retries, stale-lock recovery and campaign statistics.
+- Manual retry tools and detailed queue/log views in the manager.
+- Public AJAX subscription snippet with CSRF-style session tokens, honeypot, timing checks, Origin validation and rate limiting.
+- Secure unsubscribe confirmation snippet that changes status only after POST confirmation.
+- Ukrainian and Russian lexicons.
+- Automated PHP, JavaScript, XML, renderer, mail adapter and public guard checks.
+- Automated transport package build and clean MODX installation smoke test.
+
+### Security
+
+- Public subscription responses do not disclose whether an email already exists.
+- Blocked subscribers are not reactivated through the public form.
+- Unsubscribe links cannot complete an unsubscribe through a GET request alone.
+- Subscriber data is rechecked immediately before each delivery attempt.
+
+### Known limitations
+
+- Delivery uses the standard MODX mail transport and therefore provides at-least-once semantics.
+- Full SMTP delivery behavior still depends on the mail server configured in the target MODX installation.
+
+## [0.1.0-alpha] - 2026-07-24
+
+### Added
+
+- Initial component scaffold, xPDO schema, transport builder and manager interface foundation.
