@@ -32,26 +32,34 @@ foreach ($classes as $class) {
     }
 }
 
-$queueFields = [
-    'subject',
-    'body_html',
-    'body_text',
-    'sender_email',
-    'sender_name',
-    'reply_to',
+$fieldsByClass = [
+    'DnepritNewsletterQueue' => [
+        'subject',
+        'body_html',
+        'body_text',
+        'sender_email',
+        'sender_name',
+        'reply_to',
+    ],
+    'DnepritNewsletterCampaign' => [
+        'skipped_count',
+    ],
 ];
-$queueTable = $modx->getTableName('DnepritNewsletterQueue');
 
-foreach ($queueFields as $field) {
-    $statement = $modx->query('SHOW COLUMNS FROM ' . $queueTable . ' LIKE ' . $modx->quote($field));
-    $exists = $statement && $statement->fetch(PDO::FETCH_ASSOC);
+foreach ($fieldsByClass as $class => $fields) {
+    $table = $modx->getTableName($class);
 
-    if (!$exists && !$manager->addField('DnepritNewsletterQueue', $field)) {
-        $modx->log(
-            modX::LOG_LEVEL_ERROR,
-            '[DnepritNewsletter] Could not add queue field: ' . $field
-        );
-        return false;
+    foreach ($fields as $field) {
+        $statement = $modx->query('SHOW COLUMNS FROM ' . $table . ' LIKE ' . $modx->quote($field));
+        $exists = $statement && $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$exists && !$manager->addField($class, $field)) {
+            $modx->log(
+                modX::LOG_LEVEL_ERROR,
+                '[DnepritNewsletter] Could not add field ' . $class . '.' . $field
+            );
+            return false;
+        }
     }
 }
 
