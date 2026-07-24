@@ -137,6 +137,8 @@ DnepritNewsletter.grid.Campaigns = function (config) {
                     var record = grid.getStore().getAt(rowIndex).data;
                     if (record.can_edit) {
                         this.openUpdateWindow(record, event);
+                    } else {
+                        this.showStats(record);
                     }
                 },
                 scope: this
@@ -149,19 +151,25 @@ DnepritNewsletter.grid.Campaigns = function (config) {
 
 Ext.extend(DnepritNewsletter.grid.Campaigns, MODx.grid.Grid, {
     getMenu: function () {
-        var menu = [];
+        var menu = [{
+            text: _('dnepritnewsletter_stats_title'),
+            handler: function () {
+                this.showStats(this.menu.record);
+            }
+        }];
 
         if (this.menu.record.can_prepare) {
+            menu.push('-');
             menu.push({
                 text: _('dnepritnewsletter_queue_prepare'),
                 handler: function () {
                     this.openPrepareQueueWindow(this.menu.record);
                 }
             });
-            menu.push('-');
         }
 
         if (this.menu.record.can_edit) {
+            menu.push('-');
             menu.push({
                 text: _('dnepritnewsletter_campaign_update'),
                 handler: function () {
@@ -265,6 +273,56 @@ Ext.extend(DnepritNewsletter.grid.Campaigns, MODx.grid.Grid, {
             send_now: 1
         });
         this.queueWindow.show(event ? event.target : null);
+    },
+
+    showStats: function (record) {
+        if (!record || !record.id) {
+            return;
+        }
+
+        MODx.Ajax.request({
+            url: DnepritNewsletter.config.connectorUrl,
+            params: {
+                action: 'campaigns/stats',
+                id: record.id
+            },
+            listeners: {
+                success: {
+                    fn: function (response) {
+                        var stats = DnepritNewsletter.util.getResponseObject(response);
+                        var encode = Ext.util.Format.htmlEncode;
+                        var rows = [
+                            [_('dnepritnewsletter_stats_status'), stats.status_label || stats.status || '—'],
+                            [_('dnepritnewsletter_stats_total'), stats.total || 0],
+                            [_('dnepritnewsletter_stats_pending'), stats.pending || 0],
+                            [_('dnepritnewsletter_stats_processing'), stats.processing || 0],
+                            [_('dnepritnewsletter_stats_sent'), stats.sent || 0],
+                            [_('dnepritnewsletter_stats_failed'), stats.failed || 0],
+                            [_('dnepritnewsletter_stats_skipped'), stats.skipped || 0],
+                            [_('dnepritnewsletter_stats_retry_events'), stats.retry_events || 0],
+                            [_('dnepritnewsletter_stats_delivery_rate'), (stats.delivery_rate || 0) + '%'],
+                            [_('dnepritnewsletter_stats_scheduled_at'), stats.scheduled_at || '—'],
+                            [_('dnepritnewsletter_stats_started_at'), stats.started_at || '—'],
+                            [_('dnepritnewsletter_stats_finished_at'), stats.finished_at || '—']
+                        ];
+                        var progress = parseFloat(stats.progress || 0);
+                        var html = '<div class="dnepritnewsletter-stats">' +
+                            '<h3>' + encode(stats.title || record.title || '') + '</h3>' +
+                            '<div class="dnepritnewsletter-progress"><span style="width:' +
+                            Math.max(0, Math.min(100, progress)) + '%"></span></div>' +
+                            '<div class="dnepritnewsletter-progress-label">' + progress + '%</div><table>';
+
+                        Ext.each(rows, function (row) {
+                            html += '<tr><th>' + encode(String(row[0])) + '</th><td>' + encode(String(row[1])) + '</td></tr>';
+                        });
+
+                        html += '</table></div>';
+                        MODx.msg.alert(_('dnepritnewsletter_stats_title'), html);
+                    },
+                    scope: this
+                }
+            }
+        });
     },
 
     duplicateCampaign: function (record) {
