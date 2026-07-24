@@ -23,7 +23,8 @@
 
 .dnepritnewsletter-status-unsubscribed,
 .dnepritnewsletter-status-paused,
-.dnepritnewsletter-status-scheduled {
+.dnepritnewsletter-status-scheduled,
+.dnepritnewsletter-status-pending {
     color: #92400e;
     background: #fef3c7;
 }
@@ -34,13 +35,15 @@
     background: #fee2e2;
 }
 
-.dnepritnewsletter-status-draft {
+.dnepritnewsletter-status-draft,
+.dnepritnewsletter-status-skipped {
     color: #344054;
     background: #f2f4f7;
 }
 
 .dnepritnewsletter-status-queued,
-.dnepritnewsletter-status-sending {
+.dnepritnewsletter-status-sending,
+.dnepritnewsletter-status-processing {
     color: #1e40af;
     background: #dbeafe;
 }
@@ -62,7 +65,9 @@
 }
 
 .dnepritnewsletter-import-preview table,
-.dnepritnewsletter-import-report table {
+.dnepritnewsletter-import-report table,
+.dnepritnewsletter-details table,
+.dnepritnewsletter-stats table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -70,7 +75,11 @@
 .dnepritnewsletter-import-preview th,
 .dnepritnewsletter-import-preview td,
 .dnepritnewsletter-import-report th,
-.dnepritnewsletter-import-report td {
+.dnepritnewsletter-import-report td,
+.dnepritnewsletter-details th,
+.dnepritnewsletter-details td,
+.dnepritnewsletter-stats th,
+.dnepritnewsletter-stats td {
     padding: 6px 8px;
     border-bottom: 1px solid #eceff3;
     text-align: left;
@@ -83,12 +92,15 @@
     background: #f8fafc;
 }
 
-.dnepritnewsletter-import-report th {
-    width: 70%;
+.dnepritnewsletter-import-report th,
+.dnepritnewsletter-details th,
+.dnepritnewsletter-stats th {
+    width: 62%;
     font-weight: 500;
 }
 
-.dnepritnewsletter-import-report td {
+.dnepritnewsletter-import-report td,
+.dnepritnewsletter-stats td {
     font-weight: 700;
     text-align: right;
 }
@@ -106,7 +118,8 @@
     color: #344054;
 }
 
-.dnepritnewsletter-placeholders h3 {
+.dnepritnewsletter-placeholders h3,
+.dnepritnewsletter-stats h3 {
     margin: 0 0 16px;
     font-size: 16px;
 }
@@ -130,4 +143,76 @@
     color: #475467;
     background: #f9fafb;
     border-left: 3px solid #98a2b3;
+}
+
+.dnepritnewsletter-details,
+.dnepritnewsletter-stats {
+    padding: 4px;
+    color: #344054;
+}
+
+.dnepritnewsletter-error-box,
+.dnepritnewsletter-log-message {
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #fecdca;
+    background: #fef3f2;
+    border-radius: 4px;
+}
+
+.dnepritnewsletter-log-message {
+    border-color: #d0d5dd;
+    background: #f9fafb;
+}
+
+.dnepritnewsletter-error-box pre,
+.dnepritnewsletter-log-message pre {
+    margin: 8px 0 0;
+    max-height: 230px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.dnepritnewsletter-log-level {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.dnepritnewsletter-log-level-info {
+    color: #175cd3;
+    background: #eff8ff;
+}
+
+.dnepritnewsletter-log-level-warning {
+    color: #93370d;
+    background: #fffaeb;
+}
+
+.dnepritnewsletter-log-level-error {
+    color: #b42318;
+    background: #fef3f2;
+}
+
+.dnepritnewsletter-progress {
+    height: 12px;
+    overflow: hidden;
+    background: #eaecf0;
+    border-radius: 999px;
+}
+
+.dnepritnewsletter-progress span {
+    display: block;
+    height: 100%;
+    background: #175cd3;
+}
+
+.dnepritnewsletter-progress-label {
+    margin: 5px 0 14px;
+    color: #475467;
+    font-weight: 600;
+    text-align: right;
 }
