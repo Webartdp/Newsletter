@@ -74,15 +74,17 @@ class DnepritNewsletterQueueWorker
 
             try {
                 $this->mailer->send($queue->toArray());
-                $this->markSent($queue);
-                $stats['sent']++;
             } catch (Throwable $exception) {
                 if ($this->markFailure($queue, $exception->getMessage())) {
                     $stats['failed']++;
                 } else {
                     $stats['retried']++;
                 }
+                continue;
             }
+
+            $this->markSent($queue);
+            $stats['sent']++;
         }
 
         foreach ($campaignIds as $campaignId) {
@@ -248,6 +250,7 @@ class DnepritNewsletterQueueWorker
             $queue->set('next_attempt_at', null);
         } else {
             $queue->set('status', 'pending');
+            $queue->set('processing_at', null);
             $queue->set(
                 'next_attempt_at',
                 date('Y-m-d H:i:s', time() + $this->calculateRetryDelay($attempt))
