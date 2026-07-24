@@ -16,9 +16,6 @@ if (!headers_sent()) {
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('X-Robots-Tag: noindex, nofollow');
 }
-if ($modx->resource) {
-    $modx->resource->setCacheable(false);
-}
 
 $loadCss = filter_var($modx->getOption('loadCss', $scriptProperties, true), FILTER_VALIDATE_BOOLEAN);
 if ($loadCss) {
