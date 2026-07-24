@@ -62,6 +62,10 @@ DnepritNewsletter.grid.Subscribers = function (config) {
             cls: 'primary-button',
             handler: this.createSubscriber,
             scope: this
+        }, {
+            text: _('dnepritnewsletter_import'),
+            handler: this.openImportWindow,
+            scope: this
         }, '-', {
             xtype: 'textfield',
             id: 'dnepritnewsletter-subscribers-search',
@@ -213,6 +217,78 @@ Ext.extend(DnepritNewsletter.grid.Subscribers, MODx.grid.Grid, {
         this.updateWindow.reset();
         this.updateWindow.setValues(record);
         this.updateWindow.show(event ? event.target : null);
+    },
+
+    openImportWindow: function (button, event) {
+        var uploadWindow = MODx.load({
+            xtype: 'dnepritnewsletter-window-subscriber-import-upload',
+            listeners: {
+                success: {
+                    fn: function (response) {
+                        var data = DnepritNewsletter.util.getResponseObject(response);
+                        uploadWindow.hide();
+                        this.openImportMappingWindow(data);
+                    },
+                    scope: this
+                }
+            }
+        });
+
+        uploadWindow.reset();
+        uploadWindow.show(event ? event.target : null);
+    },
+
+    openImportMappingWindow: function (data) {
+        var mappingWindow = MODx.load({
+            xtype: 'dnepritnewsletter-window-subscriber-import-mapping',
+            importData: data,
+            listeners: {
+                success: {
+                    fn: function (response) {
+                        var report = DnepritNewsletter.util.getResponseObject(response);
+                        mappingWindow.hide();
+                        this.refresh();
+                        this.showImportReport(report);
+                    },
+                    scope: this
+                }
+            }
+        });
+
+        mappingWindow.show();
+    },
+
+    showImportReport: function (report) {
+        report = report || {};
+        var rows = [
+            [_('dnepritnewsletter_import_report_processed'), report.processed || 0],
+            [_('dnepritnewsletter_import_report_created'), report.created || 0],
+            [_('dnepritnewsletter_import_report_updated'), report.updated || 0],
+            [_('dnepritnewsletter_import_report_duplicates'), report.duplicates || 0],
+            [_('dnepritnewsletter_import_report_invalid'), report.invalid || 0],
+            [_('dnepritnewsletter_import_report_empty'), report.empty || 0],
+            [_('dnepritnewsletter_import_report_errors'), report.errors || 0]
+        ];
+        var html = '<div class="dnepritnewsletter-import-report"><table>';
+
+        Ext.each(rows, function (row) {
+            html += '<tr><th>' + Ext.util.Format.htmlEncode(row[0]) + '</th><td>' + row[1] + '</td></tr>';
+        });
+        html += '</table>';
+
+        if (report.error_rows && report.error_rows.length) {
+            html += '<div class="dnepritnewsletter-import-errors"><strong>' +
+                Ext.util.Format.htmlEncode(_('dnepritnewsletter_import_report_error_rows')) +
+                '</strong><ul>';
+            Ext.each(report.error_rows.slice(0, 10), function (error) {
+                html += '<li>#' + parseInt(error.row, 10) + ': ' +
+                    Ext.util.Format.htmlEncode(error.email || '—') + '</li>';
+            });
+            html += '</ul></div>';
+        }
+
+        html += '</div>';
+        MODx.msg.alert(_('dnepritnewsletter_import_report_title'), html);
     },
 
     changeStatus: function (status, record) {
