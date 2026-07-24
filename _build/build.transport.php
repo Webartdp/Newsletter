@@ -79,6 +79,32 @@ $package->putVehicle($package->createVehicle($menu, [
     xPDOTransport::UPDATE_OBJECT => true,
 ]));
 
+$snippets = [
+    'DnepritNewsletterSubscribe' => [
+        'description' => 'Public AJAX newsletter subscription form.',
+        'source' => $core . 'elements/snippets/subscribe.snippet.php',
+    ],
+    'DnepritNewsletterUnsubscribe' => [
+        'description' => 'Secure public unsubscribe confirmation page.',
+        'source' => $core . 'elements/snippets/unsubscribe.snippet.php',
+    ],
+];
+
+foreach ($snippets as $name => $data) {
+    $snippet = $modx->newObject('modSnippet');
+    $snippet->fromArray([
+        'name' => $name,
+        'description' => $data['description'],
+        'snippet' => file_get_contents($data['source']),
+    ], '', true, true);
+
+    $package->putVehicle($package->createVehicle($snippet, [
+        xPDOTransport::UNIQUE_KEY => 'name',
+        xPDOTransport::PRESERVE_KEYS => true,
+        xPDOTransport::UPDATE_OBJECT => true,
+    ]));
+}
+
 $settings = [
     'dnepritnewsletter.batch_size' => ['value' => 50, 'xtype' => 'numberfield'],
     'dnepritnewsletter.limit_per_minute' => ['value' => 50, 'xtype' => 'numberfield'],
@@ -92,6 +118,14 @@ $settings = [
     'dnepritnewsletter.reply_to' => ['value' => '', 'xtype' => 'textfield'],
     'dnepritnewsletter.unsubscribe_resource_id' => ['value' => 0, 'xtype' => 'numberfield'],
     'dnepritnewsletter.import_max_size' => ['value' => 10485760, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.require_consent' => ['value' => 1, 'xtype' => 'combo-boolean'],
+    'dnepritnewsletter.reactivate_unsubscribed' => ['value' => 1, 'xtype' => 'combo-boolean'],
+    'dnepritnewsletter.subscribe_min_seconds' => ['value' => 2, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.subscribe_token_ttl' => ['value' => 7200, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.subscribe_ip_limit' => ['value' => 10, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.subscribe_ip_window' => ['value' => 600, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.subscribe_email_limit' => ['value' => 3, 'xtype' => 'numberfield'],
+    'dnepritnewsletter.subscribe_email_window' => ['value' => 3600, 'xtype' => 'numberfield'],
 ];
 
 foreach ($settings as $key => $data) {
@@ -114,7 +148,7 @@ foreach ($settings as $key => $data) {
 $package->setPackageAttributes([
     'license' => file_get_contents($root . 'LICENSE'),
     'readme' => file_get_contents($root . 'README.md'),
-    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n- Campaign editor and personalized queue preparation.\n- Cron batch sender with limits and retries.\n",
+    'changelog' => "# Changelog\n\n## 0.1.0-alpha\n\n- Initial component scaffold.\n- Subscriber CRUD management.\n- CSV/TXT subscriber import.\n- Campaign editor and personalized queue preparation.\n- Cron batch sender with limits and retries.\n- Queue monitoring, delivery logs and manual retries.\n- Public AJAX subscription and secure unsubscribe snippets.\n",
 ]);
 
 $package->pack();

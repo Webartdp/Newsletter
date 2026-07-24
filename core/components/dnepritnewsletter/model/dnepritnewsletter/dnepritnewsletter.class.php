@@ -31,6 +31,7 @@ class DnepritNewsletter
             'templatesPath' => $corePath . 'elements/templates/',
             'assetsUrl' => $assetsUrl,
             'connectorUrl' => $assetsUrl . 'connector.php',
+            'publicConnectorUrl' => $assetsUrl . 'subscribe.php',
             'cssUrl' => $assetsUrl . 'css/',
             'jsUrl' => $assetsUrl . 'js/',
             'senderEmail' => $modx->getOption('dnepritnewsletter.sender_email', null, ''),
