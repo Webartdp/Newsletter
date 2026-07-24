@@ -30,6 +30,7 @@ class DnepritNewsletterCampaignDuplicateProcessor extends modProcessor
             'recipients_total' => 0,
             'sent_count' => 0,
             'failed_count' => 0,
+            'skipped_count' => 0,
             'created_at' => $now,
             'updated_at' => $now,
             'scheduled_at' => null,
