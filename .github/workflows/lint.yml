@@ -83,20 +83,22 @@ jobs:
           extensions: mysqli, pdo_mysql, zip, mbstring, xml, gd, curl
           coverage: none
 
-      - name: Download MODX Revolution
+      - name: Download MODX Revolution distribution
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL \
-            "https://github.com/modxcms/revolution/archive/refs/tags/v${MODX_VERSION}.zip" \
+          mkdir -p "${MODX_DIR}"
+          curl -fsSL --retry 3 \
+            "https://modx.s3.amazonaws.com/releases/2.8.1/modx-${MODX_VERSION}.zip" \
             -o "${RUNNER_TEMP}/modx.zip"
-          unzip -q "${RUNNER_TEMP}/modx.zip" -d "${RUNNER_TEMP}"
-          mv "${RUNNER_TEMP}/revolution-${MODX_VERSION}" "${MODX_DIR}"
+          unzip -q "${RUNNER_TEMP}/modx.zip" -d "${MODX_DIR}"
           mkdir -p \
             "${MODX_DIR}/core/cache" \
             "${MODX_DIR}/core/config" \
             "${MODX_DIR}/core/packages"
           chmod -R u+rwX "${MODX_DIR}"
+          test -f "${MODX_DIR}/setup/cli-install.php"
+          test -f "${MODX_DIR}/core/packages/core.transport.zip"
 
       - name: Install clean MODX
         shell: bash
