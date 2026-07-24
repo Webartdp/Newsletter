@@ -48,12 +48,16 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
 
     public function loadCustomCssJs()
     {
+        $jsUrl = $this->dnepritNewsletter->config['jsUrl'] . 'mgr/';
+
         $this->addCss($this->dnepritNewsletter->config['cssUrl'] . 'mgr.css');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/subscribers.window.js');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/subscribers.import.window.js');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/subscribers.grid.js');
-        $this->addJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/widgets/home.panel.js');
-        $this->addLastJavascript($this->dnepritNewsletter->config['jsUrl'] . 'mgr/sections/home.js');
+        $this->addJavascript($jsUrl . 'widgets/subscribers.window.js');
+        $this->addJavascript($jsUrl . 'widgets/subscribers.import.window.js');
+        $this->addJavascript($jsUrl . 'widgets/subscribers.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.window.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/home.panel.js');
+        $this->addLastJavascript($jsUrl . 'sections/home.js');
     }
 
     public function getTemplateFile()
