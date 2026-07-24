@@ -36,6 +36,7 @@ class DnepritNewsletterImporter
             throw new RuntimeException($this->modx->lexicon('dnepritnewsletter_import_err_extension'));
         }
 
+        $this->validateMimeType($file['tmp_name']);
         $this->ensureDirectory();
         $token = bin2hex(random_bytes(24));
         $path = $this->getPath($token, $extension);
@@ -56,7 +57,7 @@ class DnepritNewsletterImporter
 
     public function inspect($path, $extension, $limit = 10)
     {
-        $delimiter = $extension === 'txt' ? 'single' : $this->detectDelimiter($path);
+        $delimiter = $this->detectDelimiter($path);
         $rows = [];
         $maxColumns = 0;
 
@@ -148,7 +149,11 @@ class DnepritNewsletterImporter
         $value = (string)$value;
         $value = preg_replace('/^\xEF\xBB\xBF/', '', $value);
 
-        if (!function_exists('mb_detect_encoding') || mb_check_encoding($value, 'UTF-8')) {
+        if (
+            !function_exists('mb_detect_encoding') ||
+            !function_exists('mb_check_encoding') ||
+            mb_check_encoding($value, 'UTF-8')
+        ) {
             return trim($value);
         }
 
@@ -196,6 +201,34 @@ class DnepritNewsletterImporter
         return $bestCount > 1 ? $best : 'single';
     }
 
+    protected function validateMimeType($path)
+    {
+        if (!function_exists('finfo_open')) {
+            return;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if (!$finfo) {
+            return;
+        }
+
+        $mime = (string)finfo_file($finfo, $path);
+        finfo_close($finfo);
+
+        $allowed = [
+            'text/plain',
+            'text/csv',
+            'application/csv',
+            'application/vnd.ms-excel',
+            'application/octet-stream',
+            'text/x-csv',
+        ];
+
+        if ($mime !== '' && !in_array($mime, $allowed, true)) {
+            throw new RuntimeException($this->modx->lexicon('dnepritnewsletter_import_err_mime'));
+        }
+    }
+
     protected function ensureDirectory()
     {
         if (!is_dir($this->directory) && !mkdir($this->directory, 0700, true) && !is_dir($this->directory)) {
@@ -210,7 +243,12 @@ class DnepritNewsletterImporter
         }
 
         $expires = time() - 86400;
-        foreach (glob($this->directory . '*.{csv,txt}', GLOB_BRACE) ?: [] as $path) {
+        $paths = array_merge(
+            glob($this->directory . '*.csv') ?: [],
+            glob($this->directory . '*.txt') ?: []
+        );
+
+        foreach ($paths as $path) {
             if (is_file($path) && filemtime($path) < $expires) {
                 @unlink($path);
             }
