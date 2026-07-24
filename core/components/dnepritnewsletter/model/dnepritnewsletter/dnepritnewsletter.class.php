@@ -33,6 +33,10 @@ class DnepritNewsletter
             'connectorUrl' => $assetsUrl . 'connector.php',
             'cssUrl' => $assetsUrl . 'css/',
             'jsUrl' => $assetsUrl . 'js/',
+            'senderEmail' => $modx->getOption('dnepritnewsletter.sender_email', null, ''),
+            'senderName' => $modx->getOption('dnepritnewsletter.sender_name', null, ''),
+            'replyTo' => $modx->getOption('dnepritnewsletter.reply_to', null, ''),
+            'siteName' => $modx->getOption('site_name', null, ''),
         ], $config);
 
         $this->modx->addPackage(

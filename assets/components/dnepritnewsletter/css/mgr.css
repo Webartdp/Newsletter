@@ -15,19 +15,34 @@
     line-height: 18px;
 }
 
-.dnepritnewsletter-status-active {
+.dnepritnewsletter-status-active,
+.dnepritnewsletter-status-sent {
     color: #166534;
     background: #dcfce7;
 }
 
-.dnepritnewsletter-status-unsubscribed {
+.dnepritnewsletter-status-unsubscribed,
+.dnepritnewsletter-status-paused,
+.dnepritnewsletter-status-scheduled {
     color: #92400e;
     background: #fef3c7;
 }
 
-.dnepritnewsletter-status-blocked {
+.dnepritnewsletter-status-blocked,
+.dnepritnewsletter-status-failed {
     color: #991b1b;
     background: #fee2e2;
+}
+
+.dnepritnewsletter-status-draft {
+    color: #344054;
+    background: #f2f4f7;
+}
+
+.dnepritnewsletter-status-queued,
+.dnepritnewsletter-status-sending {
+    color: #1e40af;
+    background: #dbeafe;
 }
 
 .dnepritnewsletter-import-preview {
@@ -84,4 +99,35 @@
 
 .dnepritnewsletter-import-errors ul {
     margin: 6px 0 0 18px;
+}
+
+.dnepritnewsletter-placeholders {
+    padding: 20px;
+    color: #344054;
+}
+
+.dnepritnewsletter-placeholders h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+}
+
+.dnepritnewsletter-placeholders p {
+    margin: 0 0 10px;
+}
+
+.dnepritnewsletter-placeholders code {
+    display: inline-block;
+    min-width: 170px;
+    padding: 3px 7px;
+    color: #175cd3;
+    background: #eff8ff;
+    border-radius: 4px;
+}
+
+.dnepritnewsletter-placeholders .dnepritnewsletter-help {
+    margin-top: 18px;
+    padding: 12px;
+    color: #475467;
+    background: #f9fafb;
+    border-left: 3px solid #98a2b3;
 }
