@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model package="dnepritnewsletter" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="dnepritnewsletter" version="1.1">
+<model package="dnepritnewsletter" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="dnepritnewsletter" version="1.2">
     <object class="DnepritNewsletterSubscriber" table="newsletter_subscribers" extends="xPDOSimpleObject">
         <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
         <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
@@ -40,6 +40,12 @@
         <field key="subscriber_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
         <field key="email" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
         <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="subject" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="body_html" dbtype="mediumtext" phptype="string" null="false" />
+        <field key="body_text" dbtype="mediumtext" phptype="string" null="true" />
+        <field key="sender_email" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="sender_name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="reply_to" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
         <field key="status" dbtype="varchar" precision="32" phptype="string" null="false" default="pending" index="index" />
         <field key="attempts" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
         <field key="last_error" dbtype="text" phptype="string" null="true" />
