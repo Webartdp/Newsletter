@@ -71,6 +71,7 @@ $_lang['dnepritnewsletter_import_err_file_required'] = 'Виберіть CSV а�
 $_lang['dnepritnewsletter_import_err_upload'] = 'Не вдалося завантажити файл.';
 $_lang['dnepritnewsletter_import_err_size'] = 'Файл порожній або перевищує дозволений розмір.';
 $_lang['dnepritnewsletter_import_err_extension'] = 'Дозволені лише файли CSV та TXT.';
+$_lang['dnepritnewsletter_import_err_mime'] = 'Тип завантаженого файлу не підтримується.';
 $_lang['dnepritnewsletter_import_err_store'] = 'Не вдалося зберегти тимчасовий файл.';
 $_lang['dnepritnewsletter_import_err_empty'] = 'Файл не містить даних для імпорту.';
 $_lang['dnepritnewsletter_import_err_token'] = 'Некоректний токен імпорту.';
