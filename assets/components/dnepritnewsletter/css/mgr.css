@@ -5,3 +5,27 @@
     border: 1px solid #e5e7eb;
     border-radius: 4px;
 }
+
+.dnepritnewsletter-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 18px;
+}
+
+.dnepritnewsletter-status-active {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.dnepritnewsletter-status-unsubscribed {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.dnepritnewsletter-status-blocked {
+    color: #991b1b;
+    background: #fee2e2;
+}
