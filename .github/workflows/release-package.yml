@@ -49,6 +49,11 @@ jobs:
           extensions: mysqli, pdo_mysql, zip, mbstring, xml, gd, curl
           coverage: none
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Download MODX Revolution
         shell: bash
         run: |
@@ -58,6 +63,10 @@ jobs:
             -o "${RUNNER_TEMP}/modx.zip"
           unzip -q "${RUNNER_TEMP}/modx.zip" -d "${RUNNER_TEMP}"
           mv "${RUNNER_TEMP}/revolution-${MODX_VERSION}" "${MODX_DIR}"
+          mkdir -p \
+            "${MODX_DIR}/core/cache" \
+            "${MODX_DIR}/core/config" \
+            "${MODX_DIR}/core/packages"
           chmod -R u+rwX "${MODX_DIR}"
 
       - name: Install clean MODX
@@ -112,7 +121,10 @@ jobs:
           rm -rf _dist
           MODX_BASE_PATH="${MODX_DIR}" php _build/build.transport.php
           test -s "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip"
-          sha256sum --check "_dist/dnepritnewsletter-0.1.0-beta1.transport.zip.sha256"
+          (
+            cd _dist
+            sha256sum --check "dnepritnewsletter-0.1.0-beta1.transport.zip.sha256"
+          )
 
       - name: Install package and run smoke test
         shell: bash
