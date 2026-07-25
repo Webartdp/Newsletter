@@ -1,5 +1,8 @@
 <?php
 
+require_once MODX_CORE_PATH . 'components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewslettermailer.class.php';
+require_once MODX_CORE_PATH . 'components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewsletterqueueworker.class.php';
+
 class DnepritNewsletterCampaignSendBatchQueueWorker extends DnepritNewsletterQueueWorker
 {
     /** @var int */
@@ -86,15 +89,6 @@ class DnepritNewsletterCampaignSendBatchProcessor extends modProcessor
         if (!in_array((string)$campaign->get('status'), ['queued', 'scheduled', 'sending'], true)) {
             return $this->failure($this->modx->lexicon('dnepritnewsletter_queue_err_not_ready'));
         }
-
-        $corePath = $this->modx->getOption(
-            'dnepritnewsletter.core_path',
-            null,
-            MODX_CORE_PATH . 'components/dnepritnewsletter/'
-        );
-
-        require_once $corePath . 'model/dnepritnewsletter/dnepritnewslettermailer.class.php';
-        require_once $corePath . 'model/dnepritnewsletter/dnepritnewsletterqueueworker.class.php';
 
         try {
             $worker = new DnepritNewsletterCampaignSendBatchQueueWorker($this->modx, $campaignId);
