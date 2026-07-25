@@ -1,17 +1,9 @@
 <?php
 
-class DnepritnewsletterIndexManagerController extends modExtraManagerController
+require_once __DIR__ . '/controllers/home.class.php';
+
+class DnepritnewsletterIndexManagerController extends DnepritNewsletterHomeManagerController
 {
-    public function getLanguageTopics()
-    {
-        return ['dnepritnewsletter:default'];
-    }
-
-    public function checkPermissions()
-    {
-        return (bool)($this->modx->user->sudo || $this->modx->hasPermission('newsletter_view'));
-    }
-
     public static function getDefaultController()
     {
         return 'home';
