@@ -32,7 +32,9 @@ DnepritNewsletter.panel.Home = function (config) {
                 items: [{xtype: 'dnepritnewsletter-grid-logs'}]
             }, {
                 title: _('dnepritnewsletter_settings'),
-                html: '<div class="dnepritnewsletter-placeholder">' + _('dnepritnewsletter_settings') + '</div>'
+                layout: 'anchor',
+                autoScroll: true,
+                items: [{xtype: 'dnepritnewsletter-panel-settings'}]
             }]
         }]
     });
