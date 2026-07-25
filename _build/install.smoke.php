@@ -149,7 +149,7 @@ foreach ($classNames as $className) {
 $managerControllerFile = MODX_CORE_PATH . 'components/dnepritnewsletter/index.class.php';
 $requiredInstalledFiles = [
     $managerControllerFile,
-    MODX_CORE_PATH . 'components/dnepritnewsletter/controllers/home.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/controllers/mgr/home.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewsletter.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/processors/web/subscribe.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/cron/send.php',
