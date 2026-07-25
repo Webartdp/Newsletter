@@ -2,7 +2,11 @@
 
 class DnepritNewsletterQueueRemoveProcessor extends modProcessor
 {
-    public $languageTopics = ['dnepritnewsletter:default', 'dnepritnewsletter:monitoring'];
+    public $languageTopics = [
+        'dnepritnewsletter:default',
+        'dnepritnewsletter:monitoring',
+        'dnepritnewsletter:ui',
+    ];
 
     public function process()
     {
