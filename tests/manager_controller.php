@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if (!defined('MODX_CORE_PATH')) {
+    define('MODX_CORE_PATH', dirname(__DIR__) . '/core/');
+}
+
 class modExtraManagerController
 {
     public static function getDefaultController()
@@ -10,7 +14,7 @@ class modExtraManagerController
     }
 }
 
-require_once dirname(__DIR__) . '/core/components/dnepritnewsletter/index.class.php';
+require_once MODX_CORE_PATH . 'components/dnepritnewsletter/index.class.php';
 
 $className = 'DnepritnewsletterIndexManagerController';
 $homeClass = 'DnepritNewsletterHomeManagerController';
@@ -31,7 +35,6 @@ if (!is_subclass_of($className, $homeClass)) {
 }
 
 $method = new ReflectionMethod($className, 'getDefaultController');
-
 if (!$method->isStatic()) {
     fwrite(STDERR, "{$className}::getDefaultController() must be static.\n");
     exit(1);
@@ -54,4 +57,19 @@ if ($assetsMethod->getDeclaringClass()->getName() !== $homeClass) {
     exit(1);
 }
 
-echo "Manager controller routing test passed.\n";
+$templateFile = MODX_CORE_PATH . 'components/dnepritnewsletter/elements/templates/mgr/home.tpl';
+$sectionFile = dirname(__DIR__) . '/assets/components/dnepritnewsletter/js/mgr/sections/home.js';
+$template = is_file($templateFile) ? file_get_contents($templateFile) : '';
+$section = is_file($sectionFile) ? file_get_contents($sectionFile) : '';
+
+if (strpos($template, 'id="dnepritnewsletter-panel-home-div"') === false) {
+    fwrite(STDERR, "Manager template does not expose the panel render target.\n");
+    exit(1);
+}
+
+if (strpos($section, "renderTo: 'dnepritnewsletter-panel-home-div'") === false) {
+    fwrite(STDERR, "Manager section does not mount the ExtJS panel into the template target.\n");
+    exit(1);
+}
+
+echo "Manager controller and UI mounting test passed.\n";
