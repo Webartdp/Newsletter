@@ -3,8 +3,8 @@
 ## Current prerelease
 
 ```text
-Version: 0.1.0-beta1
-Package: dnepritnewsletter-0.1.0-beta1.transport.zip
+Version: 0.1.0-beta3
+Package: dnepritnewsletter-0.1.0-beta3.transport.zip
 Target: MODX Revolution 2.8.1 / PHP 7.4+
 ```
 
@@ -12,7 +12,7 @@ The beta label is intentional until SMTP and browser behavior are checked on a r
 
 ## Automated verification
 
-Release branches matching `release/*` run both the normal syntax checks and the clean-install package job. The release job installs a fresh MODX Revolution 2.8.1 instance, builds the transport ZIP, verifies its SHA-256 checksum, installs the package and validates the namespace, menu, snippets, settings, database tables and copied component files.
+Release branches matching `release/*` run both the normal syntax checks and the clean-install package job. The release job installs a fresh MODX Revolution 2.8.1 instance, builds the transport ZIP, verifies its SHA-256 checksum, installs the package and validates the namespace, menu, snippets, settings, database tables and copied component files. A separate compatibility test verifies the exact root manager controller class name expected by MODX 2.8.1.
 
 ## Downloading the package from GitHub Actions
 
@@ -20,17 +20,17 @@ Release branches matching `release/*` run both the normal syntax checks and the 
 2. Open **Actions**.
 3. Select **Build release package**.
 4. Open the latest successful run.
-5. Download the artifact named `dnepritnewsletter-0.1.0-beta1`.
+5. Download the artifact named `dnepritnewsletter-0.1.0-beta3`.
 6. Extract the downloaded artifact ZIP. It contains:
-   - `dnepritnewsletter-0.1.0-beta1.transport.zip`;
-   - `dnepritnewsletter-0.1.0-beta1.transport.zip.sha256`;
+   - `dnepritnewsletter-0.1.0-beta3.transport.zip`;
+   - `dnepritnewsletter-0.1.0-beta3.transport.zip.sha256`;
    - `release.json`.
 
 The transport ZIP itself must not be extracted before installing it in MODX.
 
 ## Installing through MODX Packages
 
-1. Copy `dnepritnewsletter-0.1.0-beta1.transport.zip` to:
+1. Copy `dnepritnewsletter-0.1.0-beta3.transport.zip` to:
 
 ```text
 /core/packages/
@@ -39,7 +39,7 @@ The transport ZIP itself must not be extracted before installing it in MODX.
 2. Open the MODX manager.
 3. Go to **Extras → Installer** / **Package Management**.
 4. Click **Search Locally for Packages**.
-5. Locate `DnepritNewsletter 0.1.0-beta1`.
+5. Locate `DnepritNewsletter 0.1.0-beta3`.
 6. Click **Install**.
 7. Clear the MODX cache and reload the manager.
 
@@ -126,14 +126,14 @@ Install the generated package into the same clean test installation and run the 
 
 ```bash
 MODX_BASE_PATH=/path/to/modx php _build/install.smoke.php \
-  _dist/dnepritnewsletter-0.1.0-beta1.transport.zip
+  _dist/dnepritnewsletter-0.1.0-beta3.transport.zip
 ```
 
 ## Promoting to stable
 
 After the staging checklist passes:
 
-1. change the release identifier from `beta1` to `pl` in `_build/config.php`;
+1. change the release identifier from `beta3` to `pl` in `_build/config.php`;
 2. add the stable entry to `CHANGELOG.md`;
 3. rebuild and rerun the clean-install workflow;
 4. create tag `v0.1.0-pl`;
