@@ -2,7 +2,7 @@
 
 class DnepritNewsletterSettingsGetProcessor extends modProcessor
 {
-    public $languageTopics = ['dnepritnewsletter:default'];
+    public $languageTopics = ['dnepritnewsletter:default', 'dnepritnewsletter:ui'];
 
     public function process()
     {
