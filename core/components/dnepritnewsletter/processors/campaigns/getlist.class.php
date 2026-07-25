@@ -44,7 +44,7 @@ class DnepritNewsletterCampaignGetListProcessor extends modObjectGetListProcesso
         $row['status_label'] = $statusLabel === $statusKey ? $row['status'] : $statusLabel;
         $isDraft = $row['status'] === 'draft';
         $row['can_edit'] = $isDraft;
-        $row['can_remove'] = $isDraft;
+        $row['can_remove'] = $row['status'] !== 'sending';
         $row['can_prepare'] = $isDraft && (int)$row['recipients_total'] === 0;
 
         return $row;
