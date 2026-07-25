@@ -12,6 +12,7 @@ $_lang['dnepritnewsletter_queue_remove'] = 'Видалити з черги';
 $_lang['dnepritnewsletter_queue_remove_selected'] = 'Видалити вибрані';
 $_lang['dnepritnewsletter_queue_remove_confirm'] = 'Видалити вибрані записи черги та пов’язані записи журналу? Кількість: [[+count]].';
 $_lang['dnepritnewsletter_queue_remove_success'] = 'Видалено з черги: [[+count]].';
+$_lang['dnepritnewsletter_queue_err_no_selection'] = 'Виберіть хоча б один запис у черзі.';
 $_lang['dnepritnewsletter_queue_err_remove_processing'] = 'Не можна видалити лист зі статусом «Обробляється». Дочекайтеся завершення поточної спроби.';
 $_lang['dnepritnewsletter_queue_remove_err_transaction'] = 'Не вдалося виконати видалення черги в транзакції.';
 $_lang['dnepritnewsletter_queue_remove_err_campaign'] = 'Не вдалося перерахувати стан розсилки після видалення черги.';
