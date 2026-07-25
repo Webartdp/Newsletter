@@ -12,14 +12,21 @@ class modExtraManagerController
 
 require_once dirname(__DIR__) . '/core/components/dnepritnewsletter/index.class.php';
 
-$method = new ReflectionMethod(DnepritNewsletterManagerController::class, 'getDefaultController');
+$className = 'DnepritnewsletterIndexManagerController';
 
-if (!$method->isStatic()) {
-    fwrite(STDERR, "DnepritNewsletterManagerController::getDefaultController() must be static.\n");
+if (!class_exists($className, false)) {
+    fwrite(STDERR, "Expected MODX root manager controller class was not declared: {$className}.\n");
     exit(1);
 }
 
-if (DnepritNewsletterManagerController::getDefaultController() !== 'home') {
+$method = new ReflectionMethod($className, 'getDefaultController');
+
+if (!$method->isStatic()) {
+    fwrite(STDERR, "{$className}::getDefaultController() must be static.\n");
+    exit(1);
+}
+
+if ($className::getDefaultController() !== 'home') {
     fwrite(STDERR, "Unexpected default manager controller.\n");
     exit(1);
 }
