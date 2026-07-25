@@ -32,23 +32,33 @@
             toolbar.add({
                 id: 'dnepritnewsletter-queue-remove-selected',
                 text: _('dnepritnewsletter_queue_remove_selected'),
-                handler: this.removeQueueItems,
+                handler: function () {
+                    this.removeQueueItems();
+                },
                 scope: this
             });
             toolbar.doLayout();
         },
 
         removeQueueItems: function (record) {
-            var records = record ? [{data: record}] : this.getSelectionModel().getSelections();
+            var records = record && record.id
+                ? [{data: record}]
+                : this.getSelectionModel().getSelections();
             var ids = [];
             var hasProcessing = false;
 
             Ext.each(records, function (selection) {
-                if (selection.data.status === 'processing') {
+                var data = selection && selection.data ? selection.data : {};
+                var id = parseInt(data.id, 10);
+
+                if (data.status === 'processing') {
                     hasProcessing = true;
                     return;
                 }
-                ids.push(parseInt(selection.data.id, 10));
+
+                if (!isNaN(id) && id > 0) {
+                    ids.push(id);
+                }
             });
 
             if (hasProcessing) {
