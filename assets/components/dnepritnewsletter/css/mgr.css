@@ -6,6 +6,22 @@
     border-radius: 4px;
 }
 
+/* Keep the long settings form inside the visible manager viewport.
+ * The form footer with Save/Reload stays outside the scrolling body,
+ * so its buttons remain available at the bottom of the panel. */
+#dnepritnewsletter-panel-settings > .x-panel-bwrap > .x-panel-body {
+    height: calc(100vh - 300px);
+    min-height: 320px;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+#dnepritnewsletter-panel-settings > .x-panel-bwrap > .x-panel-footer {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+}
+
 .dnepritnewsletter-status {
     display: inline-block;
     padding: 2px 8px;
