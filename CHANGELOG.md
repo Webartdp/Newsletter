@@ -2,6 +2,13 @@
 
 All notable changes to DnepritNewsletter are documented in this file.
 
+## [0.1.0-beta2] - 2026-07-25
+
+### Fixed
+
+- Fixed MODX 2.8.1 manager fatal error by declaring `DnepritNewsletterManagerController::getDefaultController()` as `static`.
+- Added a compatibility test that verifies the manager controller method signature before packaging.
+
 ## [0.1.0-beta1] - 2026-07-24
 
 ### Added
