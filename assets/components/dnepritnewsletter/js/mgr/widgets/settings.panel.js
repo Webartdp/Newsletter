@@ -1,6 +1,9 @@
 DnepritNewsletter.panel.Settings = function (config) {
     config = config || {};
 
+    var viewport = Ext.getBody().getViewSize();
+    var panelHeight = Math.max(420, viewport.height - 260);
+
     Ext.applyIf(config, {
         id: 'dnepritnewsletter-panel-settings',
         url: DnepritNewsletter.config.connectorUrl,
@@ -8,8 +11,25 @@ DnepritNewsletter.panel.Settings = function (config) {
             action: 'settings/update'
         },
         border: false,
-        bodyStyle: 'padding: 18px;',
+        autoHeight: false,
+        autoScroll: true,
+        height: panelHeight,
+        bodyStyle: 'padding: 18px; overflow-x: hidden; overflow-y: auto;',
         labelWidth: 245,
+        tbar: [{
+            text: _('save'),
+            cls: 'primary-button',
+            handler: function () {
+                this.submit({});
+            },
+            scope: this
+        }, {
+            text: _('dnepritnewsletter_settings_reload'),
+            handler: function () {
+                this.loadSettings();
+            },
+            scope: this
+        }],
         items: [{
             xtype: 'fieldset',
             title: _('dnepritnewsletter_settings_sender'),
@@ -197,23 +217,10 @@ DnepritNewsletter.panel.Settings = function (config) {
                 }
             }]
         }],
-        buttons: [{
-            text: _('save'),
-            cls: 'primary-button',
-            handler: function () {
-                this.submit({});
-            },
-            scope: this
-        }, {
-            text: _('dnepritnewsletter_settings_reload'),
-            handler: function () {
-                this.loadSettings();
-            },
-            scope: this
-        }],
         listeners: {
             afterrender: {
                 fn: function () {
+                    this.syncPanelHeight();
                     this.loadSettings();
                 },
                 scope: this,
@@ -236,6 +243,20 @@ DnepritNewsletter.panel.Settings = function (config) {
 };
 
 Ext.extend(DnepritNewsletter.panel.Settings, MODx.FormPanel, {
+    syncPanelHeight: function () {
+        var viewport = Ext.getBody().getViewSize();
+        var height = Math.max(420, viewport.height - 260);
+
+        this.setHeight(height);
+
+        if (this.body) {
+            this.body.setStyle('overflow-y', 'auto');
+            this.body.setStyle('overflow-x', 'hidden');
+        }
+
+        this.doLayout();
+    },
+
     loadSettings: function () {
         MODx.Ajax.request({
             url: DnepritNewsletter.config.connectorUrl,
@@ -267,7 +288,9 @@ Ext.extend(DnepritNewsletter.panel.Settings, MODx.FormPanel, {
         if (response.responseText) {
             try {
                 var decoded = Ext.decode(response.responseText);
-                return decoded.object || (decoded.result && decoded.result.object) || decoded;
+                return decoded.object ||
+                    (decoded.result && decoded.result.object) ||
+                    decoded;
             } catch (e) {
                 return {};
             }
