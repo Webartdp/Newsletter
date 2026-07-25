@@ -12,6 +12,7 @@ $_lang['dnepritnewsletter_queue_remove'] = 'Удалить из очереди';
 $_lang['dnepritnewsletter_queue_remove_selected'] = 'Удалить выбранные';
 $_lang['dnepritnewsletter_queue_remove_confirm'] = 'Удалить выбранные записи очереди и связанные записи журнала? Количество: [[+count]].';
 $_lang['dnepritnewsletter_queue_remove_success'] = 'Удалено из очереди: [[+count]].';
+$_lang['dnepritnewsletter_queue_err_no_selection'] = 'Выберите хотя бы одну запись в очереди.';
 $_lang['dnepritnewsletter_queue_err_remove_processing'] = 'Нельзя удалить письмо со статусом «Обрабатывается». Дождитесь завершения текущей попытки.';
 $_lang['dnepritnewsletter_queue_remove_err_transaction'] = 'Не удалось выполнить удаление очереди в транзакции.';
 $_lang['dnepritnewsletter_queue_remove_err_campaign'] = 'Не удалось пересчитать состояние рассылки после удаления очереди.';
