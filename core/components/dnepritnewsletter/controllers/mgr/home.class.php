@@ -32,6 +32,7 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
             'dnepritnewsletter:default',
             'dnepritnewsletter:queue',
             'dnepritnewsletter:monitoring',
+            'dnepritnewsletter:ui',
         ];
     }
 
