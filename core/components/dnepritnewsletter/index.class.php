@@ -12,7 +12,7 @@ class DnepritNewsletterManagerController extends modExtraManagerController
         return (bool)($this->modx->user->sudo || $this->modx->hasPermission('newsletter_view'));
     }
 
-    public function getDefaultController()
+    public static function getDefaultController()
     {
         return 'home';
     }
