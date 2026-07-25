@@ -1,6 +1,6 @@
 <?php
 
-class DnepritNewsletterManagerController extends modExtraManagerController
+class DnepritnewsletterIndexManagerController extends modExtraManagerController
 {
     public function getLanguageTopics()
     {
