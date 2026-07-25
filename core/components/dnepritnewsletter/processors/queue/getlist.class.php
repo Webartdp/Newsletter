@@ -65,6 +65,7 @@ class DnepritNewsletterQueueGetListProcessor extends modObjectGetListProcessor
         $statusLabel = $this->modx->lexicon($statusKey);
         $row['status_label'] = $statusLabel === $statusKey ? $row['status'] : $statusLabel;
         $row['can_retry'] = $row['status'] === 'failed';
+        $row['can_remove'] = $row['status'] !== 'processing';
         $row['last_error_short'] = $this->shorten((string)$row['last_error'], 180);
 
         return $row;

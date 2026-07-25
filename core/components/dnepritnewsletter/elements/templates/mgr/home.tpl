@@ -1,1 +1,1 @@
-<div id="dnepritnewsletter-panel-home"></div>
+<div id="dnepritnewsletter-panel-home-div"></div>

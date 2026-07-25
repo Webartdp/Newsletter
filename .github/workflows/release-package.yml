@@ -136,10 +136,10 @@ jobs:
           set -euo pipefail
           rm -rf _dist
           MODX_BASE_PATH="${MODX_DIR}" php _build/build.transport.php
-          test -s "_dist/dnepritnewsletter-0.1.0-beta2.transport.zip"
+          test -s "_dist/dnepritnewsletter-0.1.0-beta4.transport.zip"
           (
             cd _dist
-            sha256sum --check "dnepritnewsletter-0.1.0-beta2.transport.zip.sha256"
+            sha256sum --check "dnepritnewsletter-0.1.0-beta4.transport.zip.sha256"
           )
 
       - name: Install package and run smoke test
@@ -147,15 +147,15 @@ jobs:
         run: |
           set -euo pipefail
           MODX_BASE_PATH="${MODX_DIR}" php _build/install.smoke.php \
-            "_dist/dnepritnewsletter-0.1.0-beta2.transport.zip"
+            "_dist/dnepritnewsletter-0.1.0-beta4.transport.zip"
 
       - name: Upload transport package
         uses: actions/upload-artifact@v4
         with:
-          name: dnepritnewsletter-0.1.0-beta2
+          name: dnepritnewsletter-0.1.0-beta4
           path: |
-            _dist/dnepritnewsletter-0.1.0-beta2.transport.zip
-            _dist/dnepritnewsletter-0.1.0-beta2.transport.zip.sha256
+            _dist/dnepritnewsletter-0.1.0-beta4.transport.zip
+            _dist/dnepritnewsletter-0.1.0-beta4.transport.zip.sha256
             _dist/release.json
           if-no-files-found: error
           retention-days: 30

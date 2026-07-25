@@ -32,6 +32,7 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
             'dnepritnewsletter:default',
             'dnepritnewsletter:queue',
             'dnepritnewsletter:monitoring',
+            'dnepritnewsletter:ui',
         ];
     }
 
@@ -61,8 +62,13 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
         $this->addJavascript($jsUrl . 'widgets/campaigns.window.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.queue.window.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.sender.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.autostart.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.actions.js');
         $this->addJavascript($jsUrl . 'widgets/queue.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/queue.actions.js');
         $this->addJavascript($jsUrl . 'widgets/logs.grid.js');
+        $this->addJavascript($jsUrl . 'widgets/settings.panel.js');
         $this->addJavascript($jsUrl . 'widgets/home.panel.js');
         $this->addLastJavascript($jsUrl . 'sections/home.js');
     }
