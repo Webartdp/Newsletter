@@ -21,10 +21,6 @@ class DnepritNewsletterCampaignRemoveProcessor extends modProcessor
             return $this->failure($this->modx->lexicon('dnepritnewsletter_campaign_err_not_found'));
         }
 
-        if ((string)$campaign->get('status') === 'sending') {
-            return $this->failure($this->modx->lexicon('dnepritnewsletter_campaign_err_remove_sending'));
-        }
-
         if ($this->modx->getCount('DnepritNewsletterQueue', [
             'campaign_id' => $id,
             'status' => 'processing',
