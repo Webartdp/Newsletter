@@ -37,6 +37,9 @@ jobs:
       - name: Test public form guard
         run: php tests/public_guard.php
 
+      - name: Test manager controller compatibility
+        run: php tests/manager_controller.php
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
