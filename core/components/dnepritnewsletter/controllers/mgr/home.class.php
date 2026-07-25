@@ -62,6 +62,7 @@ class DnepritNewsletterHomeManagerController extends modExtraManagerController
         $this->addJavascript($jsUrl . 'widgets/campaigns.queue.window.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.grid.js');
         $this->addJavascript($jsUrl . 'widgets/campaigns.sender.js');
+        $this->addJavascript($jsUrl . 'widgets/campaigns.autostart.js');
         $this->addJavascript($jsUrl . 'widgets/queue.grid.js');
         $this->addJavascript($jsUrl . 'widgets/logs.grid.js');
         $this->addJavascript($jsUrl . 'widgets/home.panel.js');
