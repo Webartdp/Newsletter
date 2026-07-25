@@ -152,10 +152,10 @@ jobs:
           set -euo pipefail
           rm -rf _dist
           MODX_BASE_PATH="${MODX_DIR}" php _build/build.transport.php
-          test -s "_dist/dnepritnewsletter-0.1.0-beta3.transport.zip"
+          test -s "_dist/dnepritnewsletter-0.1.0-beta4.transport.zip"
           (
             cd _dist
-            sha256sum --check "dnepritnewsletter-0.1.0-beta3.transport.zip.sha256"
+            sha256sum --check "dnepritnewsletter-0.1.0-beta4.transport.zip.sha256"
           )
 
       - name: Install and smoke test package
@@ -163,4 +163,4 @@ jobs:
         run: |
           set -euo pipefail
           MODX_BASE_PATH="${MODX_DIR}" php _build/install.smoke.php \
-            "_dist/dnepritnewsletter-0.1.0-beta3.transport.zip"
+            "_dist/dnepritnewsletter-0.1.0-beta4.transport.zip"
