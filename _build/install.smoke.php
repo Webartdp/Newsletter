@@ -146,18 +146,44 @@ foreach ($classNames as $className) {
     $assert((int)$statement->fetchColumn() === 1, 'Database table was not created: ' . $tableName);
 }
 
+$managerControllerFile = MODX_CORE_PATH . 'components/dnepritnewsletter/index.class.php';
 $requiredInstalledFiles = [
+    $managerControllerFile,
+    MODX_CORE_PATH . 'components/dnepritnewsletter/controllers/mgr/home.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewsletter.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/processors/campaigns/sendbatch.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/processors/campaigns/remove.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/processors/queue/remove.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/processors/settings/get.class.php',
+    MODX_CORE_PATH . 'components/dnepritnewsletter/processors/settings/update.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/processors/web/subscribe.class.php',
     MODX_CORE_PATH . 'components/dnepritnewsletter/cron/send.php',
     MODX_ASSETS_PATH . 'components/dnepritnewsletter/connector.php',
     MODX_ASSETS_PATH . 'components/dnepritnewsletter/subscribe.php',
+    MODX_ASSETS_PATH . 'components/dnepritnewsletter/js/mgr/widgets/campaigns.actions.js',
+    MODX_ASSETS_PATH . 'components/dnepritnewsletter/js/mgr/widgets/queue.actions.js',
+    MODX_ASSETS_PATH . 'components/dnepritnewsletter/js/mgr/widgets/settings.panel.js',
     MODX_ASSETS_PATH . 'components/dnepritnewsletter/js/web/subscribe.js',
     MODX_ASSETS_PATH . 'components/dnepritnewsletter/css/web.css',
 ];
 
 foreach ($requiredInstalledFiles as $requiredInstalledFile) {
     $assert(is_file($requiredInstalledFile), 'Installed file is missing: ' . $requiredInstalledFile);
+}
+
+if (is_file($managerControllerFile)) {
+    $modx->loadClass('modManagerController', '', false, true);
+    require_once $managerControllerFile;
+
+    $indexClass = 'DnepritnewsletterIndexManagerController';
+    $homeClass = 'DnepritNewsletterHomeManagerController';
+
+    $assert(class_exists($indexClass, false), 'Expected manager index controller class was not declared.');
+    $assert(class_exists($homeClass, false), 'Manager home controller class was not loaded.');
+    $assert(
+        class_exists($indexClass, false) && class_exists($homeClass, false) && is_subclass_of($indexClass, $homeClass),
+        'Manager index controller does not render the home controller implementation.'
+    );
 }
 
 $serviceClass = MODX_CORE_PATH . 'components/dnepritnewsletter/model/dnepritnewsletter/dnepritnewsletter.class.php';

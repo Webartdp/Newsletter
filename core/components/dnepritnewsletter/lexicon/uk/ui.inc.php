@@ -1,0 +1,53 @@
+<?php
+
+$_lang['dnepritnewsletter_campaign_remove'] = 'Видалити розсилку';
+$_lang['dnepritnewsletter_campaign_err_no_selection'] = 'Виберіть розсилку в таблиці.';
+$_lang['dnepritnewsletter_campaign_remove_confirm'] = 'Видалити цю розсилку? Разом із нею буде видалено всі записи черги та журналу відправлення. Цю дію неможливо скасувати.';
+$_lang['dnepritnewsletter_campaign_removed'] = 'Розсилку, її чергу та журнал видалено.';
+$_lang['dnepritnewsletter_campaign_err_remove_sending'] = 'Не можна видалити розсилку під час відправлення. Зупиніть відправлення та дочекайтеся завершення поточного листа.';
+$_lang['dnepritnewsletter_campaign_err_remove_transaction'] = 'Не вдалося виконати видалення розсилки в транзакції.';
+$_lang['dnepritnewsletter_campaign_err_remove'] = 'Не вдалося видалити розсилку.';
+
+$_lang['dnepritnewsletter_queue_remove'] = 'Видалити з черги';
+$_lang['dnepritnewsletter_queue_remove_selected'] = 'Видалити вибрані';
+$_lang['dnepritnewsletter_queue_remove_confirm'] = 'Видалити вибрані записи черги та пов’язані записи журналу? Кількість: [[+count]].';
+$_lang['dnepritnewsletter_queue_remove_success'] = 'Видалено з черги: [[+count]].';
+$_lang['dnepritnewsletter_queue_err_no_selection'] = 'Виберіть хоча б один запис у черзі.';
+$_lang['dnepritnewsletter_queue_err_remove_processing'] = 'Не можна видалити лист зі статусом «Обробляється». Дочекайтеся завершення поточної спроби.';
+$_lang['dnepritnewsletter_queue_remove_err_transaction'] = 'Не вдалося виконати видалення черги в транзакції.';
+$_lang['dnepritnewsletter_queue_remove_err_campaign'] = 'Не вдалося перерахувати стан розсилки після видалення черги.';
+
+$_lang['dnepritnewsletter_settings_sender'] = 'Відправник за замовчуванням';
+$_lang['dnepritnewsletter_settings_delivery'] = 'Відправлення та обмеження';
+$_lang['dnepritnewsletter_settings_subscription'] = 'Підписка, відписка та імпорт';
+$_lang['dnepritnewsletter_settings_mail_status'] = 'Стан пошти MODX';
+$_lang['dnepritnewsletter_settings_batch_size'] = 'Розмір пакета листів';
+$_lang['dnepritnewsletter_settings_limit_per_minute'] = 'Ліміт листів за хвилину (0 — без ліміту)';
+$_lang['dnepritnewsletter_settings_limit_per_hour'] = 'Ліміт листів за годину (0 — без ліміту)';
+$_lang['dnepritnewsletter_settings_max_attempts'] = 'Максимум спроб відправлення';
+$_lang['dnepritnewsletter_settings_retry_delay'] = 'Затримка повтору, секунд';
+$_lang['dnepritnewsletter_settings_lock_ttl'] = 'Час блокування листа, секунд';
+$_lang['dnepritnewsletter_settings_failure_limit'] = 'Помилок до блокування підписника';
+$_lang['dnepritnewsletter_settings_unsubscribe_resource_id'] = 'ID сторінки відписки';
+$_lang['dnepritnewsletter_settings_import_max_size_mb'] = 'Максимальний файл імпорту, МБ';
+$_lang['dnepritnewsletter_settings_require_consent'] = 'Вимагати підтвердження згоди в публічній формі';
+$_lang['dnepritnewsletter_settings_reactivate_unsubscribed'] = 'Дозволити повторну активацію відписаних';
+$_lang['dnepritnewsletter_settings_subscribe_min_seconds'] = 'Мінімальний час заповнення форми, секунд';
+$_lang['dnepritnewsletter_settings_subscribe_token_ttl'] = 'Строк дії токена форми, секунд';
+$_lang['dnepritnewsletter_settings_subscribe_ip_limit'] = 'Ліміт підписок з однієї IP-адреси';
+$_lang['dnepritnewsletter_settings_subscribe_ip_window'] = 'Період ліміту IP, секунд';
+$_lang['dnepritnewsletter_settings_subscribe_email_limit'] = 'Ліміт спроб для одного email';
+$_lang['dnepritnewsletter_settings_subscribe_email_window'] = 'Період ліміту email, секунд';
+$_lang['dnepritnewsletter_settings_mail_use_smtp'] = 'SMTP увімкнено';
+$_lang['dnepritnewsletter_settings_mail_smtp_hosts'] = 'SMTP-сервер';
+$_lang['dnepritnewsletter_settings_mail_smtp_port'] = 'SMTP-порт';
+$_lang['dnepritnewsletter_settings_mail_smtp_user'] = 'SMTP-користувач';
+$_lang['dnepritnewsletter_settings_mail_help'] = 'Пароль SMTP тут не показується. Поштовий транспорт налаштовується в системних налаштуваннях MODX.';
+$_lang['dnepritnewsletter_settings_open_mail'] = 'Відкрити налаштування пошти MODX';
+$_lang['dnepritnewsletter_settings_reload'] = 'Перезавантажити значення';
+$_lang['dnepritnewsletter_settings_saved'] = 'Налаштування розсилки збережено.';
+$_lang['dnepritnewsletter_settings_err_sender_email'] = 'Вкажіть коректний email відправника.';
+$_lang['dnepritnewsletter_settings_err_reply_to'] = 'Вкажіть коректний Reply-To email.';
+$_lang['dnepritnewsletter_settings_err_validation'] = 'Перевірте заповнення налаштувань.';
+$_lang['dnepritnewsletter_settings_err_number'] = 'Допустиме значення: від [[+min]] до [[+max]].';
+$_lang['dnepritnewsletter_settings_err_save'] = 'Не вдалося зберегти налаштування розсилки.';
