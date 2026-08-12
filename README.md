@@ -5,21 +5,22 @@
 ## Реалізовано
 
 - xPDO-моделі підписників, кампаній, персональної черги та журналу;
-- CMP на ExtJS для підписників, кампаній, черги й журналу;
+- CMP на ExtJS для підписників, кампаній, черги, журналу та налаштувань;
 - CRUD підписників, статуси, масові операції та імпорт CSV/TXT;
 - HTML-редактор кампаній, текстова версія й персональні плейсхолдери;
 - формування персональної черги з негайним або запланованим стартом;
-- пакетна відправка через CLI Cron із блокуванням, лімітами й повторними спробами;
+- браузерна пакетна відправка з продовженням збереженої черги;
+- optional CLI Cron worker із блокуванням, лімітами й повторними спробами;
 - повторна перевірка статусу підписника перед кожним листом;
 - моніторинг черги, SMTP-помилок, ручних повторів і статистики кампанії;
 - публічна AJAX-форма підписки без залежності від jQuery;
-- session-токен, honeypot, мінімальний час заповнення та rate limiting;
+- одноразові file-backed form tokens, honeypot, мінімальний час заповнення, Origin validation та rate limiting;
 - безпечна сторінка відписки з окремим POST-підтвердженням;
 - український і російський інтерфейс.
 
 ## Публічна форма підписки
 
-Викликайте сніпет **некешованим**, оскільки кожна форма містить персональний session-токен:
+Викликайте сніпет **некешованим**, оскільки кожен рендер форми створює одноразовий токен:
 
 ```modx
 [[!DnepritNewsletterSubscribe]]
@@ -54,7 +55,7 @@ formClass           CSS-клас форми
 formId              власний HTML id
 loadCss             підключати стандартний web.css
 loadJs              підключати AJAX-скрипт
-tpl                  власний чанк форми
+tpl                 власний чанк форми
 ```
 
 Для власного чанка передаються плейсхолдери:
@@ -80,11 +81,33 @@ tpl                  власний чанк форми
 
 - мати `action="[[+connector_url]]"`, `method="post"` і атрибут `data-dneprit-newsletter-form`;
 - передавати приховане поле `form_token` зі значенням `[[+form_token]]`;
-- передавати `email`, необов’язкове `name` і checkbox `consent=1`;
+- передавати `email`;
+- передавати `name`, якщо використовується ім’я;
+- передавати checkbox `consent=1`, якщо `requireConsent=1`;
 - містити порожнє honeypot-поле `website`;
 - містити елемент з `data-dneprit-newsletter-message` для відповіді AJAX.
 
-Успішна публічна відповідь навмисно однакова для нової, вже активної або заблокованої адреси. Це не дозволяє використовувати форму для перевірки, чи існує email у базі. Відписаний підписник може бути повторно активований; при цьому генерується новий токен відписки, а старі посилання перестають діяти.
+Якщо у власному дизайні checkbox згоди відсутній, вимогу потрібно вимкнути саме для цього виклику:
+
+```modx
+[[!DnepritNewsletterSubscribe?
+    &tpl=`MyNewsletterForm`
+    &source=`footer`
+    &requireConsent=`0`
+]]
+```
+
+Публічні токени зберігаються як короткоживучі одноразові JSON-файли у:
+
+```text
+core/cache/dnepritnewsletter/form-tokens/
+```
+
+Після успішної підписки використаний token видаляється, а endpoint повертає новий `form_token`. JavaScript оновлює приховане поле без перезавантаження сторінки.
+
+`subscribe.js` обробляє submit у capture phase, одразу фіксує token і формує `FormData` явно. Це не дозволяє стороннім submit-обробникам сайту очистити `form_token` до AJAX-запиту.
+
+Успішна публічна відповідь навмисно однакова для нової, вже активної або заблокованої адреси. Це не дозволяє використовувати форму для перевірки, чи існує email у базі. Відписаний підписник може бути повторно активований, якщо дозволено відповідним налаштуванням.
 
 Подія успішної підписки доступна у браузері:
 
@@ -118,7 +141,7 @@ Rate limiting зберігається у `core/cache/dnepritnewsletter/rate-lim
 [[!DnepritNewsletterUnsubscribe]]
 ```
 
-3. Вкажіть ID ресурсу в системному налаштуванні:
+3. Вкажіть ID ресурсу в налаштуваннях DnepritNewsletter або системному налаштуванні:
 
 ```text
 dnepritnewsletter.unsubscribe_resource_id
@@ -126,7 +149,7 @@ dnepritnewsletter.unsubscribe_resource_id
 
 Плейсхолдер `[[+unsubscribe_url]]` у листі автоматично веде на цей ресурс із параметром `newsletter_token`.
 
-GET-запит лише показує сторінку підтвердження. Статус підписника змінюється тільки після POST із session-токеном. Завдяки цьому антивірусні та поштові сканери посилань не можуть випадково відписати користувача простим відкриттям URL.
+GET-запит лише показує сторінку підтвердження. Статус підписника змінюється тільки після POST-підтвердження, тому поштові сканери посилань не можуть випадково відписати користувача простим відкриттям URL.
 
 Параметри сніпета відписки:
 
@@ -143,13 +166,15 @@ loadCss        підключати стандартний web.css
 
 ## Імпорт підписників
 
-Підтримуються `.csv` і `.txt` до 10 МБ за замовчуванням. Автоматично визначаються кома, крапка з комою, табуляція або вертикальна риска. TXT без роздільників обробляється як один email у рядку.
+Підтримуються `.csv` і `.txt`. Автоматично визначаються кома, крапка з комою, табуляція або вертикальна риска. TXT без роздільників обробляється як один email у рядку.
+
+Тимчасові файли зберігаються в:
 
 ```text
-dnepritnewsletter.import_max_size
+core/cache/dnepritnewsletter/imports/
 ```
 
-Тимчасові файли зберігаються в `core/cache/dnepritnewsletter/imports/` і автоматично видаляються.
+і автоматично видаляються.
 
 ## Плейсхолдери листа
 
@@ -164,11 +189,34 @@ dnepritnewsletter.import_max_size
 
 ## Налаштування пошти
 
-Відправлення використовує стандартний `modPHPMailer`. SMTP налаштовується системними параметрами MODX, зокрема `mail_use_smtp`, `mail_smtp_hosts`, `mail_smtp_port`, `mail_smtp_user`, `mail_smtp_pass` і `mail_smtp_prefix`.
+Відправлення використовує стандартний mail transport MODX. SMTP налаштовується системними параметрами MODX, зокрема:
 
-## Cron
+```text
+mail_use_smtp
+mail_smtp_hosts
+mail_smtp_port
+mail_smtp_user
+mail_smtp_pass
+mail_smtp_prefix
+```
 
-Рекомендований запуск щохвилини:
+У вкладці **Налаштування** DnepritNewsletter доступні sender defaults, batch size, rate limits, retry settings, import/public-form settings і read-only SMTP status.
+
+## Відправка кампаній
+
+Основний ручний сценарій працює прямо в CMP:
+
+1. створити кампанію;
+2. сформувати чергу;
+3. запустити відправку одразу або натиснути **Запустити розсилку**;
+4. тримати вкладку менеджера відкритою під час browser batches;
+5. якщо вкладка була закрита, відкрити компонент знову й продовжити залишок черги.
+
+Черга зберігається на сервері, тому закриття браузера не видаляє невідправлені записи.
+
+## Optional Cron
+
+Для unattended delivery можна запускати worker щохвилини:
 
 ```cron
 * * * * * /usr/bin/php /path/to/site/core/components/dnepritnewsletter/cron/send.php >> /path/to/site/core/cache/logs/dnepritnewsletter-cron.log 2>&1
@@ -186,24 +234,22 @@ dnepritnewsletter.import_max_size
 php core/components/dnepritnewsletter/cron/send.php --limit=20
 ```
 
-Параметри відправника:
+Основні параметри доставки:
 
 ```text
-dnepritnewsletter.batch_size         50
-dnepritnewsletter.limit_per_minute   50
-dnepritnewsletter.limit_per_hour     500
-dnepritnewsletter.max_attempts       3
-dnepritnewsletter.retry_delay        300
-dnepritnewsletter.lock_ttl           3600
+dnepritnewsletter.batch_size
+dnepritnewsletter.limit_per_minute
+dnepritnewsletter.limit_per_hour
+dnepritnewsletter.max_attempts
+dnepritnewsletter.retry_delay
+dnepritnewsletter.lock_ttl
 ```
-
-Worker використовує файлове блокування та статус `processing`. Повторні спроби мають експоненційну затримку. Застарілі блокування повертаються до черги після `lock_ttl`.
 
 ## Моніторинг у CMP
 
-Вкладка **«Черга»** показує статус, спроби, час наступної спроби, worker і повну SMTP-помилку. Записи `failed` можна вручну повернути в чергу.
+Вкладка **Черга** показує статус, спроби, час наступної спроби, worker і SMTP-помилку. Записи `failed` можна вручну повернути в чергу. Доступні також видалення вибраних записів черги та перерахунок статистики кампанії.
 
-Вкладка **«Журнал»** показує системні, поштові та публічні події, включно з `public_subscribe_created`, `public_subscribe_reactivated` і `public_unsubscribe`.
+Вкладка **Журнал** показує системні, поштові та публічні події, включно з `public_subscribe_created`, `public_subscribe_reactivated` і `public_unsubscribe`.
 
 Додаткові дозволи MODX:
 
@@ -225,8 +271,8 @@ newsletter_campaigns_manage
 - PHP 7.4+;
 - MySQL або MariaDB;
 - ExtJS 3.4 / MODExt;
-- увімкнені PHP-сесії;
-- налаштований поштовий транспорт MODX.
+- налаштований поштовий транспорт MODX;
+- writable `core/cache/` для rate-limit та form-token файлів.
 
 ## Збірка пакета
 
@@ -236,18 +282,13 @@ newsletter_campaigns_manage
 php _build/build.transport.php
 ```
 
-Transport package буде створено у `core/packages/`.
+Transport package буде створено в `_dist/`.
 
-## План розробки
+Поточний prerelease:
 
-1. ~~CRUD підписників.~~
-2. ~~Імпорт CSV/TXT.~~
-3. ~~CRUD кампаній і редактор листа.~~
-4. ~~Формування черги.~~
-5. ~~Пакетна відправка через Cron.~~
-6. ~~Журнал, ручні повтори та статистика.~~
-7. ~~AJAX-підписка й захищена сторінка відписки.~~
-8. Повна перевірка на MODX 2.8.1, документація й релізний transport package.
+```text
+dnepritnewsletter-0.1.0-beta6.transport.zip
+```
 
 ## Ліцензія
 
