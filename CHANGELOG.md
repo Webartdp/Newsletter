@@ -2,6 +2,24 @@
 
 All notable changes to DnepritNewsletter are documented in this file.
 
+## [0.1.0-beta6] - 2026-08-12
+
+### Fixed
+
+- Public subscription form tokens are now stored as short-lived one-time files under `core/cache/dnepritnewsletter/form-tokens/` instead of relying on the PHP session shared between the rendered MODX page and the standalone AJAX endpoint.
+- Public subscribe JavaScript now captures the form token before competing submit handlers can mutate or reset the form.
+- Public form data is built explicitly before the AJAX request, preventing a third-party submit handler from clearing `form_token` before serialization.
+- Duplicate script registration and parallel submissions are blocked, and successful responses replace the consumed token with the newly issued token.
+
+### Tests
+
+- Public guard tests now verify file-backed tokens across separate guard instances, token consumption and existing origin/rate-limit protection.
+- Added a regression test that verifies token capture, explicit `FormData` construction and capture-phase submit handling in the public subscription JavaScript.
+
+### Verified
+
+- Real-site public subscription was tested successfully with a custom footer form after the fix.
+
 ## [0.1.0-beta5] - 2026-08-12
 
 ### Fixed

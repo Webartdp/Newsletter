@@ -37,6 +37,9 @@ jobs:
       - name: Test public form guard
         run: php tests/public_guard.php
 
+      - name: Test public subscribe JavaScript
+        run: php tests/public_subscribe_js.php
+
       - name: Test manager controller compatibility
         run: php tests/manager_controller.php
 
@@ -152,10 +155,10 @@ jobs:
           set -euo pipefail
           rm -rf _dist
           MODX_BASE_PATH="${MODX_DIR}" php _build/build.transport.php
-          test -s "_dist/dnepritnewsletter-0.1.0-beta5.transport.zip"
+          test -s "_dist/dnepritnewsletter-0.1.0-beta6.transport.zip"
           (
             cd _dist
-            sha256sum --check "dnepritnewsletter-0.1.0-beta5.transport.zip.sha256"
+            sha256sum --check "dnepritnewsletter-0.1.0-beta6.transport.zip.sha256"
           )
 
       - name: Install and smoke test package
@@ -163,4 +166,4 @@ jobs:
         run: |
           set -euo pipefail
           MODX_BASE_PATH="${MODX_DIR}" php _build/install.smoke.php \
-            "_dist/dnepritnewsletter-0.1.0-beta5.transport.zip"
+            "_dist/dnepritnewsletter-0.1.0-beta6.transport.zip"
