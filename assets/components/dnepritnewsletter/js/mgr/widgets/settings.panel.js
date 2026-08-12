@@ -16,20 +16,38 @@ DnepritNewsletter.panel.Settings = function (config) {
         height: panelHeight,
         bodyStyle: 'padding: 18px; overflow-x: hidden; overflow-y: auto;',
         labelWidth: 245,
-        tbar: [{
-            text: _('save'),
-            cls: 'primary-button',
-            handler: function () {
-                this.submit({});
-            },
-            scope: this
-        }, {
-            text: _('dnepritnewsletter_settings_reload'),
-            handler: function () {
-                this.loadSettings();
-            },
-            scope: this
-        }],
+        tbar: new Ext.Toolbar({
+            height: 54,
+            style: 'padding: 10px 0; background: #ffffff;',
+            items: [
+                '->',
+                {
+                    text: _('save'),
+                    cls: 'primary-button',
+                    minWidth: 120,
+                    handler: function () {
+                        this.submit({});
+                    },
+                    scope: this
+                },
+                {
+                    xtype: 'tbspacer',
+                    width: 10
+                },
+                {
+                    text: _('dnepritnewsletter_settings_reload'),
+                    minWidth: 175,
+                    handler: function () {
+                        this.loadSettings();
+                    },
+                    scope: this
+                },
+                {
+                    xtype: 'tbspacer',
+                    width: 14
+                }
+            ]
+        }),
         items: [{
             xtype: 'fieldset',
             title: _('dnepritnewsletter_settings_sender'),
