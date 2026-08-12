@@ -2,6 +2,21 @@
 
 All notable changes to DnepritNewsletter are documented in this file.
 
+## [0.1.0-beta5] - 2026-08-12
+
+### Fixed
+
+- Fixed bulk queue deletion so the toolbar button no longer passes its own ExtJS button object as a queue record.
+- Queue deletion now correctly uses the selected rows and safely ignores invalid IDs.
+- Queue removal processor explicitly loads the queue lexicon topic for translated server-side errors.
+- Settings form now has its own vertical scrolling area instead of growing beyond the visible MODX manager viewport.
+- Save and reload controls were moved to a top toolbar and spaced/aligned for easier access on smaller screens.
+
+### Verified
+
+- Real SMTP delivery was tested successfully on the target MODX installation.
+- Queue management, sending, retries, deletion, statistics and settings were manually exercised on the target site.
+
 ## [0.1.0-beta4] - 2026-07-25
 
 ### Added
